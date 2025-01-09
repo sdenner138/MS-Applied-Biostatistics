@@ -1,0 +1,162 @@
+#### Sara Denner
+#### Statistical Programming for Biostatisticians
+#### Final Project
+#### Improved
+
+mlr_1 <- function(out_var, predictors, data) {
+  
+  ############################# Handle Edge Cases ####################################
+  
+  #Check if input data is a data frame and not a matrix or an array
+  if(!is.data.frame(data)){
+    stop(paste("Input must be a data frame, not a matrix or array."))
+  }
+  
+  
+  #Check if the outcome variable is in the data frame
+  if (!(out_var %in% names(data))){
+    stop(paste("Error: Output variable", out_var, "is not found in the data frame"))
+  }
+  
+  
+  ################# Format Inputs Into Matrix Format #######################
+  
+  #Convert string of predictors into a list of individual parameters in format c("x1", "x2", ...)
+  cleaned_predictors <- gsub(" ", "", predictors) #take out any spaces in the input string
+  predictor_list <- unlist(strsplit(cleaned_predictors, "\\+")) #split the string at + and output a vector
+  
+  #Check if predictor_list is in the data frame
+  missing_pred <- predictor_list[!(predictor_list %in% colnames(data))]
+  if (length(missing_pred) > 0) {
+    stop(paste("Error: The following predictor is not found in data frame:", 
+               paste(missing_pred)))
+  }
+  
+  ################## Handle Missing Data  ###############
+  
+  #ORIGINAL CODE
+  #Check if there are any NA values - count the number of missing rows, and delete the rows.
+  #if(any(is.na(data)) == TRUE){ #if any NA values are detected in the data frame inputted
+  # na.rows <- apply(data,1, function(row) any(is.na(row))) #identify rows where there is an NA value as TRUE in a logical vector
+  #no.more.na <- data[!na.rows,] #subset input data frame to only include values from the logical vector that are FALSE
+  #count.deleted.na.rows <- sum(na.rows) #count number of deleted rows
+  #data <- no.more.na
+  #cat("WARNING:\n", count.deleted.na.rows, "row(s) have been deleted due to missingness", "\n")
+  #}
+  
+  
+  # in the original code, the ENTIRE dataframe is checked for NA values
+  # and any NA values, including those NOT in the regression model (aka not just in
+  #the outcome variable and predictors). This makes there be more NA values deleted than are
+  # necessary - this is incorrect. Leads to loss of more rows than lm() would remove.
+  
+  #this new way will only delete NA values in the outcome variable and predictor values
+  
+  cln_data_1 <- data[,c(out_var, predictor_list)] #make a new dataset including only the predictors and outcome variable used in regression
+  cln_data <- na.omit(cln_data_1) #remove missing values only used in the regression
+  
+  #make a warning message about how many NA's were removed - only if there are any NAs removed
+  na.rows <- apply(cln_data_1,1, function(row) any(is.na(row)))
+  count.na.rows <- sum(na.rows)
+  if(count.na.rows > 0) {
+    cat("(", count.na.rows, "row(s) deleted due to missingness)", "\n")
+  }
+  
+  ######################## Format Cleaned Data into Matrix Format ###########################
+  
+  #create response vector
+  outcome <- cln_data[[out_var]]
+  #create predictor matrix
+  input <- cln_data[predictor_list]
+  x0 <- rep(1,nrow(cln_data)) #add intercept
+  xdf <- cbind(x0, input)
+  xmat <- as.matrix(xdf) #convert to matrix format
+  
+  ############### Calculate Multiple Linear Regression Statistics #######################
+  
+  #Create betahat vector - parameter estimates for all predictors
+  betahat <- (solve(t(xmat) %*% xmat)) %*% (t(xmat) %*% outcome)
+  
+  #get standard errors for all predictors
+  
+  RSS <- (t(outcome) %*% outcome) - (t(betahat)%*%t(xmat) %*% outcome)
+  n <- nrow(xmat)
+  p <- ncol(xmat)-1
+  s2 <- as.numeric((RSS)/(n-p-1))
+  var.betahat <- s2*solve(t(xmat)%*%xmat)
+  std.error.betahat <- sqrt(diag(var.betahat))
+  
+  #get R-squared goodness of fit measure
+  #R^2 = 1-((RSS)/SYY)
+  #SYY = Y'Y-n(ybar)^2
+  SYY <- (t(outcome)%*%outcome) - n*((mean(outcome))^2)
+  R2 <- 1-(RSS/SYY)
+  
+  #Get Adjusted R2
+  R2a <- ((n-1)*R2-p)/(n-p-1)
+  
+  ############### Get F-Statistic - Global Hypothesis Test #######################
+  
+  #F = MSReg/MSE
+  SSreg <- (t(betahat) %*% t(xmat) %*% outcome) - (n*(mean(outcome))^2)
+  MSReg <- SSreg/p
+  MSE <- RSS/(n-p-1)
+  F <- MSReg/MSE
+  
+  
+  #degrees of freedom for f stat and calculate the P value
+  df.F.1 <- p
+  df.F.2 <- n-p-1
+  pvalue <- 1-pf(F,df.F.1, df.F.2)
+  
+  #p value of F statistic
+  #critical F value
+  crit.F <- qf(1-.05, p, (n-(p+1)))
+  
+  #check if calculated F stat is greater than the critical F value
+  if (F > crit.F) {
+    result <- "There is significant evidence to reject the null hypothesis and conclude \n that at least one predictor is linearly associated with the outcome variable"
+  } else {
+    result <- "Failed to reject null hypothesis. The outcome variable is not linearly \n associated with the predictors."
+  }
+  
+  ################################## Format Output ####################################
+  
+  cat("Parameter Estimates:", "\n")
+  for (i in 1:nrow(betahat)){
+    if (i==1){
+      cat("Intercept", ":", betahat[i,], "\n")
+    } else{
+      cat("Beta", i-1, ":", betahat[i,], "\n")
+    }
+  }
+  
+  
+  cat("\n","Standard Errors for Each Parameter Estimate:", "\n")
+  for (i in 1:length(std.error.betahat)){
+    if (i == 1) {
+      cat("SD Intercept", ":", std.error.betahat[i], "\n")
+    } else{
+      cat("SD Beta", i-1, ":", std.error.betahat[i], "\n")
+    }
+  }
+  
+  cat("\n","R-Squared Goodness of Fit:", "\n", R2, "\n")
+  cat("\n","Adjusted R-Squared:", "\n", R2a, "\n")
+  cat("\n","F-Statistic:","\n", F,"on", df.F.1, "and", df.F.2, "Degrees of Freedom", "\n")
+  cat("\n","P-Value of F Statistic:", "\n", pvalue, "\n")
+  cat("\n", "Conclusion:", "\n", result)
+  
+}
+
+###test using airquality dataset
+
+summary(lm(Temp ~ Ozone, data = airquality))
+mlr("Temp", "Ozone", airquality)
+mlr_1("Temp", "Ozone", airquality)
+
+
+
+summary(lm(Temp ~ Month, data = airquality))
+mlr("Temp", "Month", airquality)
+mlr_1("Temp", "Month", airquality)
