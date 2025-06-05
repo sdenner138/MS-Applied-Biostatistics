@@ -1,0 +1,3285 @@
+##########################
+####### HMS Psychosis ####
+####### Shiv Denner ######
+##########################
+
+##### Load Data from 2014 - 2024
+
+###2014-2015
+library(readxl)
+#HMS1415 <- read_excel("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2014-2015_PUBLIC.xlsx")
+#HMS1415 <- as.data.frame(HMS1415)
+#save(HMS1415, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1415.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1415.Rdata")
+
+###2015-2016
+#HMS1516 <- read_excel("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2015-2016_PUBLIC.xlsx")
+#HMS1516 <- as.data.frame(HMS1516)
+#save(HMS1516, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1516.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1516.Rdata")
+
+##2016-2017
+#HMS1617 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2016-2017_PUBLIC.csv")
+#HMS1617 <- as.data.frame(HMS1617)
+#save(HMS1617, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1617.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1617.Rdata")
+
+
+##2017-2018
+#HMS1718 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2017-2018_PUBLIC_instchars.csv")
+#HMS1718 <- as.data.frame(HMS1718)
+#save(HMS1718, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1718.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1718.Rdata")
+
+
+##2018-2019
+#HMS1819 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2018-2019_PUBLIC_instchars.csv")
+#HMS1819 <- as.data.frame(HMS1819)
+#save(HMS1819, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1819.Rdata")
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1819.Rdata")
+
+
+##2019-2020
+#HMS1920 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2019-2020_PUBLIC_instchars.csv")
+#HMS1920 <- as.data.frame(HMS1920)
+#save(HMS1920, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1920.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS1920.Rdata")
+
+
+##2020-2021
+#HMS2021 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2020-2021_PUBLIC_instchars.csv")
+#HMS2021 <- as.data.frame(HMS2021)
+#save(HMS2021, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2021.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2021.Rdata")
+
+##2021-2022
+#HMS2122 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2021-2022_PUBLIC_instchars.csv")
+#HMS2122 <- as.data.frame(HMS2122)
+#save(HMS2122, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2122.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2122.Rdata")
+
+
+#2022-2023
+#HMS2223 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2022-2023_PUBLIC_instchars (1).csv")
+#HMS2223 <- as.data.frame(HMS2223)
+#save(HMS2223, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2223.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2223.Rdata")
+
+
+#2023-2024
+#HMS2324 <- read.csv("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/HMS_2023-2024_PUBLIC_instchars.csv")
+#HMS2324 <- as.data.frame(HMS2324)
+#save(HMS2324, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2324.Rdata")
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/HMS2324.Rdata")
+
+
+################ Ensure consistent names & coding for each variable in each year#######################
+library(dplyr)
+########### Race Variable - SELECT ALL THAT APPLY
+
+#######2015-2016
+
+HMS1516$race_white
+HMS1516$race_black
+HMS1516$race_his
+##convert race_his to 1/NA - to avoid 1/0/NA being different format - convert
+##all 0s and NA's to 0, and 1 if not
+HMS1516$race_his <- ifelse(is.na(HMS1516$race_his) | HMS1516$race_his == 0, NA,1)
+
+HMS1516$race_ainaan
+HMS1516$race_asian
+HMS1516$race_pi
+HMS1516$race_mides
+HMS1516$race_other
+
+### Create race variable
+HMS1516 <- HMS1516 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+  ))
+
+table(HMS1516$race)
+
+##2016-2017
+
+#Change coding - needs to be numeric. Replace strings where the string is not empty
+#with 1, and replace empty strings with NA
+
+HMS1617$race_white <- ifelse(HMS1617$race_white != "", 1, NA)
+HMS1617$race_black <- ifelse(HMS1617$race_black != "", 1, NA)
+##for some reason race_his is not in character format, but convert to 1/NA
+HMS1617$race_his <- ifelse(HMS1617$race_his == 0 | is.na(HMS1617$race_his), NA, 1)
+HMS1617$race_ainaan <- ifelse(HMS1617$race_ainaan != "", 1, NA)
+HMS1617$race_asian <- ifelse(HMS1617$race_asian != "", 1, NA)
+HMS1617$race_pi <- ifelse(HMS1617$race_pi != "", 1, NA)
+HMS1617$race_mides <- ifelse(HMS1617$race_mides != "", 1, NA)
+HMS1617$race_other <- ifelse(HMS1617$race_other != "", 1, NA)
+
+### Create race variable
+HMS1617 <- HMS1617 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+
+table(HMS1617$race)
+
+
+##2017-2018
+
+HMS1718$race_white
+HMS1718$race_black
+HMS1718$race_his #why is this mostly 1/0 with some NAs while others are all 1 and NA?
+##Convert race_his to 1/NA format
+HMS1718$race_his <- ifelse(HMS1718$race_his == 0 | is.na(HMS1718$race_his), NA, 1)
+
+HMS1718$race_ainaan
+HMS1718$race_asian
+HMS1718$race_pi
+HMS1718$race_mides
+HMS1718$race_other
+
+### Create race variable
+HMS1718 <- HMS1718 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS1718$race)
+
+##2018-2019
+
+HMS1819$race_white
+HMS1819$race_black
+HMS1819$race_his
+#Convert race_his to 1/NA format
+HMS1819$race_his <- ifelse(is.na(HMS1819$race_his) | HMS1819$race_his == 0, NA, 1)
+HMS1819$race_ainaan
+HMS1819$race_asian
+HMS1819$race_pi
+HMS1819$race_mides
+HMS1819$race_other
+
+### Create race variable
+HMS1819 <- HMS1819 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS1819$race)
+
+##2019-2020
+
+#change to class numeric, if string is empty change to NA, if string is not empty change to 1
+HMS1920$race_white <- ifelse(HMS1920$race_white != "", 1, NA)
+HMS1920$race_black <- ifelse(HMS1920$race_black != "", 1, NA)
+
+#race_his has 0s, 1s, and NAs - if string is equal to 1, change to 1. Else, NA
+HMS1920$race_his <- ifelse(HMS1920$race_his == "1",1, NA)
+HMS1920$race_ainaan <- ifelse(HMS1920$race_ainaan != "", 1, NA)
+HMS1920$race_asian <- ifelse(HMS1920$race_asian != "", 1, NA)
+HMS1920$race_pi <- ifelse(HMS1920$race_pi != "", 1, NA)
+HMS1920$race_mides <- ifelse(HMS1920$race_mides != "", 1, NA)
+HMS1920$race_other <- ifelse(HMS1920$race_other != "", 1, NA)
+
+### Create race variable
+HMS1920 <- HMS1920 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS1920$race)
+
+
+##2020-2021
+HMS2021$race_white
+HMS2021$race_black
+HMS2021$race_his
+
+
+#Change coding to numeric 1/NA
+HMS2021$race_white
+HMS2021$race_white <- ifelse(HMS2021$race_white != "", 1, NA)
+HMS2021$race_white <- as.numeric(HMS2021$race_white)
+HMS2021$race_black
+HMS2021$race_black <- ifelse(HMS2021$race_black != "", 1, NA)
+HMS2021$race_black <- as.numeric(HMS2021$race_black)
+#convert race_his to 1/NA
+HMS2021$race_his <- ifelse(HMS2021$race_his == 0 | is.na(HMS2021$race_his), NA, 1)
+HMS2021$race_his
+HMS2021$race_his <- as.numeric(HMS2021$race_his)
+HMS2021$race_ainaan
+HMS2021$race_ainaan <- ifelse(HMS2021$race_ainaan != "", 1, NA)
+HMS2021$race_his <- as.numeric(HMS2021$race_his)
+HMS2021$race_asian
+HMS2021$race_asian <- ifelse(HMS2021$race_asian != "", 1, NA)
+HMS2021$race_asian <- as.numeric(HMS2021$race_asian)
+HMS2021$race_pi <- ifelse(HMS2021$race_pi != "", 1, NA)
+HMS2021$race_pi
+HMS2021$race_pi <- as.numeric(HMS2021$race_pi)
+HMS2021$race_mides <- ifelse(HMS2021$race_mides != "", 1, NA)
+HMS2021$race_mides
+HMS2021$race_other <- ifelse(HMS2021$race_other != "", 1, NA)
+HMS2021$race_other
+HMS2021$race_other <- as.numeric(HMS2021$race_other)
+
+### Create race variable
+HMS2021 <- HMS2021 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS2021$race)
+
+## 2021-2022
+
+HMS2122$race_white
+HMS2122$race_black
+HMS2122$race_his
+HMS2122$race_ainaan
+HMS2122$race_asian
+HMS2122$race_pi
+HMS2122$race_mides
+HMS2122$race_other
+
+### Create race variable
+HMS2122 <- HMS2122 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS2122$race)
+
+####### 2022-2023
+
+HMS2223$race_white
+HMS2223$race_black
+HMS2223$race_his
+HMS2223$race_ainaan
+HMS2223$race_asian
+HMS2223$race_pi
+HMS2223$race_mides
+HMS2223$race_other
+
+### Create race variable
+HMS2223 <- HMS2223 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS2223$race)
+
+########### 2023-2024
+
+HMS2324$race_white
+HMS2324$race_black
+HMS2324$race_his
+HMS2324$race_ainaan
+HMS2324$race_asian
+HMS2324$race_pi
+HMS2324$race_mides
+HMS2324$race_other
+
+### Create race variable
+HMS2324 <- HMS2324 %>% mutate(race = case_when(
+  race_white == 1 & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "White",
+  
+  race_black == 1 & is.na(race_white) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "African American/Black",
+  
+  race_ainaan == 1 & is.na(race_white) & is.na(race_black) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "American Indian or Alaskan Native",
+  
+  race_asian == 1  & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ "Asian",
+  
+  race_his == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_pi) & is.na(race_mides) ~ "Hispanic/Latin(x)",
+  
+  race_pi == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_mides) ~ "Native Hawaiian or Pacific Islander",
+  
+  race_mides == 1 & is.na(race_white) & is.na(race_black) & is.na(race_ainaan) 
+  & is.na(race_asian) & is.na(race_his) & is.na(race_pi) ~ "Middle Eastern, Arab, or Arab American",
+  
+  sum(race_black, race_white, race_ainaan, race_asian, race_his, race_pi, race_mides,
+      na.rm = T) > 1 ~ "Multiracial",
+  
+  is.na(race_white) & is.na(race_black) & is.na(race_ainaan) & is.na(race_asian) 
+  & is.na(race_his) & is.na(race_pi) & is.na(race_mides) ~ NA
+  
+))
+table(HMS2324$race)
+
+
+########## Gender Variable - not select all that apply
+
+#### 2015-2016
+table(HMS1516$sex_birth)
+#leave NA as missing
+
+#### 2016-2017
+table(HMS1617$sex_birth)
+
+#Change all responses in the "female" category to 1
+HMS1617$sex_birth[HMS1617$sex_birth == "Female"] <- 1
+
+#Change all responses in the "male" category to 2
+HMS1617$sex_birth[HMS1617$sex_birth == "Male"] <- 2
+
+#Change all responses in the "intersex" category to 3
+HMS1617$sex_birth[HMS1617$sex_birth == "Intersex"] <- 3
+
+#Change all empty strings to NA
+HMS1617$sex_birth[nchar(HMS1617$sex_birth) == 0] <- NA
+
+HMS1617$sex_birth
+#Change class to numeric
+HMS1617$sex_birth <- as.numeric(HMS1617$sex_birth)
+
+HMS1617$sex_birth
+
+#### 2017-2018
+table(HMS1718$sex_birth)
+
+#### 2018-2019
+table(HMS1819$sex_birth)
+
+#### 2019-2020
+HMS1920$sex_birth
+#Change empty strings to NA
+HMS1920$sex_birth[nchar(HMS1920$sex_birth) == 0] <- NA
+#change class to numeric
+HMS1920$sex_birth <- as.numeric(HMS1920$sex_birth)
+#check
+table(HMS1920$sex_birth)
+
+
+#### 2020 - 2021
+HMS2021$sex_birth
+#Change all responses in the "female" category to 1
+HMS2021$sex_birth[HMS2021$sex_birth == "Female"] <- 1
+
+#Change all responses in the "male" category to 2
+HMS2021$sex_birth[HMS2021$sex_birth == "Male"] <- 2
+
+#Change all responses in the "intersex" category to 3
+HMS2021$sex_birth[HMS2021$sex_birth == "Intersex"] <- 3
+
+#Change all empty strings to NA
+HMS2021$sex_birth[nchar(HMS2021$sex_birth) == 0] <- NA
+
+
+#Change class to numeric
+HMS2021$sex_birth <- as.numeric(HMS2021$sex_birth)
+
+#check
+table(HMS2021$sex_birth)
+
+#### 2021-2022
+
+table(HMS2122$sex_birth)
+
+
+#### 2022-2023
+
+HMS2223$sex_birth
+table(HMS2223$sex_birth)
+
+#### 2023-2024
+HMS2324$sex_birth
+table(HMS2324$sex_birth)
+
+############# Perceived Need Variable - not select all that apply
+
+##2015-2016
+table(HMS1516$percneed)
+
+##2016-2017
+
+HMS1617$percneed
+
+
+#need to change coding to numeric, and any 0s and empty strings to NA
+
+#If the response is "Strongly Agree", code as 1
+HMS1617$percneed[HMS1617$percneed == "Strongly agree"] <- 1
+#If the response is "Agree", code as 2
+HMS1617$percneed[HMS1617$percneed == "Agree"] <- 2
+#If the response is "Somewhat agree", code as 3
+HMS1617$percneed[HMS1617$percneed == "Somewhat agree"] <- 3
+#If the response is "Somewhat disagree", code as 4
+HMS1617$percneed[HMS1617$percneed == "Somewhat disagree"] <- 4
+#If the response is "Disagree", code as 5
+HMS1617$percneed[HMS1617$percneed == "Disagree"] <- 5
+#If the response is "Strongly disagree", code as 6
+HMS1617$percneed[HMS1617$percneed == "Strongly disagree"] <- 6
+#Change empty strings and strings with "0" to NA
+HMS1617$percneed[HMS1617$percneed == "0"] <- NA
+HMS1617$percneed[HMS1617$percneed == ""] <- NA
+#Change class to numeric
+HMS1617$percneed <- as.numeric(HMS1617$percneed)
+
+table(HMS1617$percneed)
+
+###### 2017-2018
+HMS1718$percneed
+
+###### 2018-2019
+HMS1819$percneed
+
+###### 2019-2020
+HMS1920$percneed
+HMS1920$percneed[HMS1920$percneed == ""]
+HMS1920$percneed[HMS1920$percneed == "0"]
+#change to numeric
+HMS1920$percneed <- as.numeric(HMS1920$percneed)
+
+HMS1920$percneed
+
+###### 2020-2021
+HMS2021$percneed
+HMS2021$percneed[HMS2021$percneed == ""]
+HMS2021$percneed[HMS2021$percneed == "0"]
+#If the response is "Strongly Agree", code as 1
+HMS2021$percneed[HMS2021$percneed == "Strongly agree"] <- 1
+#If the response is "Agree", code as 2
+HMS2021$percneed[HMS2021$percneed == "Agree"] <- 2
+#If the response is "Somewhat agree", code as 3
+HMS2021$percneed[HMS2021$percneed == "Somewhat agree"] <- 3
+#If the response is "Somewhat disagree", code as 4
+HMS2021$percneed[HMS2021$percneed == "Somewhat disagree"] <- 4
+#If the response is "Disagree", code as 5
+HMS2021$percneed[HMS2021$percneed == "Disagree"] <- 5
+#If the response is "Strongly disagree", code as 6
+HMS2021$percneed[HMS2021$percneed == "Strongly disagree"] <- 6
+#Change empty strings to NA
+HMS2021$percneed[HMS2021$percneed == ""] <- NA
+#Change class to numeric
+HMS2021$percneed <- as.numeric(HMS2021$percneed)
+
+HMS2021$percneed
+
+## 2021-2022
+HMS2122$percneed
+
+## 2022-2023
+HMS2223$percneed
+
+## 2023-2024
+HMS2324$percneed
+
+
+############# Reasons for Seeking Help Variable - SELECT ALL THAT APPLY
+
+## Goal here is to make the format and coding of the variable consistent across all years
+## so we will convert each year to having the format :
+## why_tx_1
+## why_tx_2
+## why_tx_3
+## ...
+## why_tx_9
+
+## End result must be of class "numeric"
+## if a value = 1, then the person selected yes to the condition
+## if a value = 0, then the person did not select the condition
+
+###### 2014-2015 - NOT USING
+
+###### 2015-2016
+HMS1516$why_tx_1
+HMS1516$why_tx_2
+HMS1516$why_tx_3
+HMS1516$why_tx_4
+HMS1516$why_tx_5
+HMS1516$why_tx_6
+HMS1516$why_tx_7
+HMS1516$why_tx_8
+HMS1516$why_tx_9
+
+
+###### 2016-2017
+#in this year, the data is in text format
+class(HMS1617$why_tx_1) #character
+HMS1617$why_tx_1[HMS1617$why_tx_1 == "0"]
+#check if the value is in character format using nchar. If the string is not empty (ie
+#there are greater than 0 characters in the string) convert to 1. If the string is empty
+#or the string reads "0", convert to NA
+
+HMS1617$why_tx_1 <- ifelse(nchar(HMS1617$why_tx_1) > 1, 1, NA) #greater than 1 to exclude "0" responses
+HMS1617$why_tx_2 <- ifelse(nchar(HMS1617$why_tx_2) > 1, 1, NA)
+HMS1617$why_tx_3 <- ifelse(nchar(HMS1617$why_tx_3) > 1, 1, NA)
+HMS1617$why_tx_4 <- ifelse(nchar(HMS1617$why_tx_4) > 1, 1, NA)
+HMS1617$why_tx_5 <- ifelse(nchar(HMS1617$why_tx_5) > 1, 1, NA)
+HMS1617$why_tx_6 <- ifelse(nchar(HMS1617$why_tx_6) > 1, 1, NA)
+HMS1617$why_tx_7 <- ifelse(nchar(HMS1617$why_tx_7) > 1, 1, NA)
+HMS1617$why_tx_8 <- ifelse(nchar(HMS1617$why_tx_8) > 1, 1, NA)
+HMS1617$why_tx_9 <- ifelse(nchar(HMS1617$why_tx_9) > 1, 1, NA)
+
+HMS1617$why_tx_1
+
+
+
+###### 2017-2018
+#originally class integer, with responses = 1 if chosen and NA if not
+
+HMS1718$why_tx_1
+HMS1718$why_tx_2
+HMS1718$why_tx_3
+
+###### 2018-2019
+#originally class integer, with responses = 1 if chosen and NA if not
+
+HMS1819$why_tx_1
+HMS1819$why_tx_2
+
+###### 2019-2020
+
+HMS1920$why_tx_1#character string, so we need to convert to numeric
+
+
+HMS1920$why_tx_1 <- ifelse(nchar(HMS1920$why_tx_1) > 0, 1, NA)
+HMS1920$why_tx_2 <- ifelse(nchar(HMS1920$why_tx_2) > 0, 1, NA)
+HMS1920$why_tx_3 <- ifelse(nchar(HMS1920$why_tx_3) > 0, 1, NA)
+HMS1920$why_tx_4 <- ifelse(nchar(HMS1920$why_tx_4) > 0, 1, NA)
+HMS1920$why_tx_5 <- ifelse(nchar(HMS1920$why_tx_5) > 0, 1, NA)
+HMS1920$why_tx_6 <- ifelse(nchar(HMS1920$why_tx_6) > 0, 1, NA)
+HMS1920$why_tx_7 <- ifelse(nchar(HMS1920$why_tx_7) > 0, 1, NA)
+HMS1920$why_tx_8 <- ifelse(nchar(HMS1920$why_tx_8) > 0, 1, NA)
+HMS1920$why_tx_9 <- ifelse(nchar(HMS1920$why_tx_9) > 0, 1, NA)
+
+HMS1920$why_tx_1
+HMS1920$why_tx_2
+HMS1920$why_tx_3
+
+###### 2020-2021
+
+
+HMS2021$why_tx_1 #of class "character"
+HMS2021$why_tx_2
+HMS2021$why_tx_6
+HMS2021$why_tx_9
+HMS2021$why_tx_10
+HMS2021$why_tx_11
+HMS2021$why_tx_12
+#Convert to numeric/binary coding
+
+HMS2021$why_tx_1 <- ifelse(nchar(HMS2021$why_tx_1) > 1, 1, NA)
+HMS2021$why_tx_2 <- ifelse(nchar(HMS2021$why_tx_2) > 1, 1, NA)
+HMS2021$why_tx_3 <- ifelse(nchar(HMS2021$why_tx_3) > 1, 1, NA)
+HMS2021$why_tx_4 <- ifelse(nchar(HMS2021$why_tx_4) > 1, 1, NA)
+HMS2021$why_tx_5 <- ifelse(nchar(HMS2021$why_tx_5) > 1, 1, NA)
+HMS2021$why_tx_6 <- ifelse(nchar(HMS2021$why_tx_6) > 1, 1, NA)
+HMS2021$why_tx_8 <- ifelse(nchar(HMS2021$why_tx_8) > 1, 1, NA)
+HMS2021$why_tx_9 <- ifelse(nchar(HMS2021$why_tx_9) > 1, 1, NA)
+HMS2021$why_tx_10 <- ifelse(nchar(HMS2021$why_tx_10) > 1, 1, NA)
+HMS2021$why_tx_11 <- ifelse(nchar(HMS2021$why_tx_11) > 1, 1, NA)
+HMS2021$why_tx_12 <- ifelse(nchar(HMS2021$why_tx_12) > 1, 1, NA)
+
+#create empty why_tx_7 vector
+HMS2021$why_tx_7 <- 0
+
+#if why_tx_10 is true OR why_tx_11 is true, assign the value of why_tx_7 to be true
+HMS2021$why_tx_7 <- ifelse(HMS2021$why_tx_10 == 1 | HMS2021$why_tx_11 == 1, 1, 0)
+HMS2021$why_tx_7
+
+#if why_tx_12 is true OR why_tx_6 is true, assign the value of why_tx_6 to be true
+HMS2021$why_tx_6 <- ifelse(HMS2021$why_tx_12 == 1 | HMS2021$why_tx_6 == 1, 1, 0)
+HMS2021$why_tx_6
+
+###### 2021-2022
+HMS2122$why_tx_1
+HMS2122$why_tx_2
+HMS2122$why_tx_9
+
+class(HMS2122$why_tx_1) #of class integer
+
+#create empty why_tx_7 variable
+HMS2122$why_tx_7 <- 0
+
+#If tx_10 or tx_11 are true, assign why_tx_7 = true
+HMS2122$why_tx_7 <- ifelse(HMS2122$why_tx_10 == 1 | HMS2122$why_tx_11 == 1, 1, 0)
+HMS2122$why_tx_7
+
+#If tx_12 or tx_6 are true, assign why_tx_6 to be true
+HMS2122$why_tx_6 <- ifelse(HMS2122$why_tx_12 == 1 | HMS2122$why_tx_6 == 1, 1, 0)
+HMS2122$why_tx_6
+
+###### 2022-2023
+HMS2223$why_tx_1
+HMS2223$why_tx_2
+
+#If why_tx_11 or why_tx_7 are true, assign value of why_tx_7 to be true
+HMS2223$why_tx_7 <- ifelse(HMS2223$why_tx_7 == 1 | HMS2223$why_tx_11 == 1, 1, 0)
+
+#If why_tx_10 or why_tx_6 are true, assign value of why_tx_6 to be true
+HMS2223$why_tx_6 <- ifelse(HMS2223$why_tx_6 == 1 | HMS2223$why_tx_10 == 1, 1, 0)
+
+#Change name of why_tx_12 to why_tx_9 for consistency in naming across all years
+names(HMS2223)[names(HMS2223) == "why_tx_12"] <- "why_tx_9"
+
+
+##2023-2024
+
+HMS2324$why_tx_1
+HMS2324$why_tx_2
+
+#If tx_11 or tx_7 are true, why_tx_7 is true
+HMS2324$why_tx_7 <- ifelse(HMS2324$why_tx_7 == 1 | HMS2324$why_tx_11 == 1, 1, 0)
+
+#If tx_10 or tx_6 are true, why_tx_6 is true
+HMS2324$why_tx_6 <- ifelse(HMS2324$why_tx_10 == 1 | HMS2324$why_tx_6 == 1, 1, 0)
+
+#Change name of why_tx_12 to why_tx_9 for consistency in naming across all years
+names(HMS2324)[names(HMS2324) == "why_tx_12"] <- "why_tx_9"
+
+####################### Perception of How Helpful Treatment Is Variable
+
+###### 2016-2024
+#ther_help_me --> how helpful do you think it would be IF you were having mental health probs
+#meds_help_me --> how helpful on average do you think medication would be for you if you were having mental or emotional health problems?
+
+
+
+###### 2015-2016 Therapy
+HMS1516$ther_help_me
+table(HMS1516$ther_help_me)
+
+###### 2015-2016 Meds
+HMS1516$meds_help_me
+table(HMS1516$meds_help_me)
+
+
+###### 2016-2017 Therapy
+
+HMS1617$ther_help_me #originally character -- convert to numeric
+
+#Convert entries labelled "Very helpful" to 1
+HMS1617$ther_help_me[HMS1617$ther_help_me == "Very helpful"] <- 1
+
+#Convert entries labelled "Helpful" to 2
+HMS1617$ther_help_me[HMS1617$ther_help_me == "Helpful"] <- 2
+
+#Convert entries labelled "Somewhat helpful" to 3
+HMS1617$ther_help_me[HMS1617$ther_help_me == "Somewhat helpful"] <- 3
+
+#Convert entries labelled "Not helpful" to 4
+HMS1617$ther_help_me[HMS1617$ther_help_me == "Not helpful"] <- 4
+
+#Convert empty strings to NA
+HMS1617$ther_help_me[HMS1617$ther_help_me == ""] <- NA
+
+#Convert to class numeric
+HMS1617$ther_help_me <- as.numeric(HMS1617$ther_help_me)
+
+table(HMS1617$ther_help_me)
+
+###### 2016-2017 Meds
+
+HMS1617$meds_help_me #originally of class character
+
+#Convert entries labelled "Very helpful" to 1
+HMS1617$meds_help_me[HMS1617$meds_help_me == "Very helpful"] <- 1
+
+#Convert "Helpful" to 2
+HMS1617$meds_help_me[HMS1617$meds_help_me == "Helpful"] <- 2
+
+#Convert "Somewhat helpful" to 3
+HMS1617$meds_help_me[HMS1617$meds_help_me == "Somewhat helpful"] <- 3
+
+#Convert "Not helpful" to 4
+HMS1617$meds_help_me[HMS1617$meds_help_me == "Not helpful"] <- 4
+
+#Convert empty strings to NA
+HMS1617$meds_help_me[HMS1617$meds_help_me == ""] <- NA
+
+#Convert to numeric
+HMS1617$meds_help_me <- as.numeric(HMS1617$meds_help_me)
+
+#Check
+HMS1617$meds_help_me
+
+###### 2017-2018 Therapy
+HMS1718$ther_help_me
+
+###### 2017-2018 Meds
+HMS1718$meds_help_me
+
+
+###### 2018-2019 Therapy
+HMS1819$ther_help_me
+
+table(HMS1819$ther_help_me)
+
+###### 2018-2019 Meds
+HMS1819$meds_help_me
+
+table(HMS1819$meds_help_me)
+
+###### 2019-2020 Therapy
+HMS1920$ther_help_me #originally character
+
+#Convert to class integer
+HMS1920$ther_help_me <- as.numeric(HMS1920$ther_help_me)
+
+HMS1920$ther_help_me
+
+###### 2019-2020 Meds
+HMS1920$meds_help_me #class character
+
+#convert to class integer
+HMS1920$meds_help_me <- as.numeric(HMS1920$meds_help_me)
+HMS1920$meds_help_me
+table(HMS1920$meds_help_me)
+
+###### 2020-2021 Therapy
+HMS2021$ther_help_me #of class character
+
+#Convert any entries labelled "Very helpful" to 1
+HMS2021$ther_help_me[HMS2021$ther_help_me == "Very helpful"] <- 1
+#Convert any entries labelled "Helpful" to 2
+HMS2021$ther_help_me[HMS2021$ther_help_me == "Helpful"] <- 2
+#Convert any entries labelled "Somewhat helpful" to 3
+HMS2021$ther_help_me[HMS2021$ther_help_me == "Somewhat helpful"] <- 3
+#Convert any entries labelled "Not helpful" to 4
+HMS2021$ther_help_me[HMS2021$ther_help_me == "Not helpful"] <- 4
+
+#Convert to class integer
+HMS2021$ther_help_me <- as.numeric(HMS2021$ther_help_me)
+
+HMS2021$ther_help_me
+table(HMS2021$ther_help_me)
+
+###### 2020-2021 Meds
+HMS2021$meds_help_me #of class character
+
+#Convert "Very helpful" to 1
+HMS2021$meds_help_me[HMS2021$meds_help_me == "Very helpful"] <- 1
+#Convert "Helpful" to 2
+HMS2021$meds_help_me[HMS2021$meds_help_me == "Helpful"] <- 2
+#Convert "Somewhat helpful" to 3
+HMS2021$meds_help_me[HMS2021$meds_help_me == "Somewhat helpful"] <- 3
+#Convert "Not helpful" to 4
+HMS2021$meds_help_me[HMS2021$meds_help_me == "Not helpful"] <- 4
+
+#Convert to class numeric
+HMS2021$meds_help_me <- as.numeric(HMS2021$meds_help_me)
+
+#Summary stats
+table(HMS2021$meds_help_me)
+
+###### 2021-2022 Therapy
+HMS2122$ther_help_me #requires no changes
+
+###### 2021-2022 Meds
+HMS2122$meds_help_me
+
+###### 2022-2023 Therapy
+HMS2223$ther_help_me #requires no changes
+
+##2022-2023 Meds
+HMS2223$meds_help_me
+
+###### 2023-2024 Therapy
+HMS2324$ther_help_me #requires no changes
+
+###### 2023-2024 Meds
+HMS2324$meds_help_me
+
+
+######################## Medication Use Past 12 Months Variable - SELECT ALL THAT APPLY
+
+###### 2015-2016
+
+##meds_1
+HMS1516$meds_1
+
+##meds_2
+HMS1516$meds_2
+
+##meds_3
+HMS1516$meds_3
+
+##meds_4 
+HMS1516$meds_4
+
+##meds_5
+HMS1516$meds_5
+
+##meds_6
+HMS1516$meds_6
+
+##meds_7
+HMS1516$meds_7
+
+##meds_8
+HMS1516$meds_8
+
+##meds_9
+HMS1516$meds_9
+
+##tx_any variable --> if ther_any = 1 or meds_any = 1, tx_any = 1, indication of having 
+## received any formal mental health treatment during the past 12 months
+
+##Create meds_any variable - assign meds_any = 1 for any student with a 1 for meds_1 -
+## meds_7, and assign meds_any = 0 for any student with meds_8 = 1
+library(dplyr)
+HMS1516 <- HMS1516 %>% mutate(meds_any = case_when(meds_1 == 1 | meds_2 == 1 | meds_3 == 1 |
+                                                     meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+                                                     meds_7 == 1 ~ 1,
+                                                   meds_8 == 1 ~ 0,
+                                                   TRUE ~ NA_real_))
+HMS1516$meds_any
+
+
+###2016-2017
+
+##meds_1
+HMS1617$meds_1 #of type character, need to convert to 1 if used, 0 if not
+#Convert all text to "1"
+HMS1617$meds_1[HMS1617$meds_1 == "0"]
+#If the number of characters is greater than 1 (to exclude entries with responses "0"),
+#convert to 1. Else, convert to NA
+HMS1617$meds_1 <- ifelse(nchar(HMS1617$meds_1) > 1, 1, NA)
+HMS1617$meds_1
+
+##meds_2
+HMS1617$meds_2#of type character, need to convert to 1 if used, NA if not
+
+HMS1617$meds_2 <- ifelse(nchar(HMS1617$meds_2) > 1, 1, NA)
+
+##meds_3
+HMS1617$meds_3
+#Convert all text to "1"
+HMS1617$meds_3 <- ifelse(nchar(HMS1617$meds_3) > 1, 1, NA)
+
+##meds_4
+HMS1617$meds_4
+#Convert all text to "1"
+HMS1617$meds_4 <- ifelse(nchar(HMS1617$meds_4) > 1, 1, NA)
+
+##meds_5
+HMS1617$meds_5
+#Convert all text to "1"
+HMS1617$meds_5 <- ifelse(nchar(HMS1617$meds_5) > 1, 1, NA)
+
+##meds_6
+HMS1617$meds_6
+#Convert all text to "1"
+HMS1617$meds_6 <- ifelse(nchar(HMS1617$meds_6) > 1, 1, NA)
+
+##meds_7
+HMS1617$meds_7
+#Convert all text to "1"
+HMS1617$meds_7 <- ifelse(nchar(HMS1617$meds_7) > 1, 1, NA)
+
+##meds_8
+HMS1617$meds_8
+#Convert all text to "1"
+HMS1617$meds_8 <- ifelse(nchar(HMS1617$meds_8) > 1, 1, NA)
+
+##meds_9
+HMS1617$meds_9
+#Convert all text to "1"
+HMS1617$meds_9 <- ifelse(nchar(HMS1617$meds_9) > 1, 1, NA)
+
+
+#######2017-2018
+
+##meds_1
+HMS1718$meds_1
+
+##meds_2
+HMS1718$meds_2
+
+##meds_3
+HMS1718$meds_3
+
+##meds_4
+HMS1718$meds_4
+
+##meds_5
+HMS1718$meds_5
+
+##meds_6
+HMS1718$meds_6
+
+##meds_7
+HMS1718$meds_7
+
+##meds_8
+HMS1718$meds_8
+
+##meds_9
+HMS1718$meds_9
+
+###########2018-2019
+
+##meds_1
+HMS1819$meds_1
+
+##meds_2
+HMS1819$meds_2
+
+##meds_3
+HMS1819$meds_3
+
+##meds_4
+HMS1819$meds_4 
+
+##meds_5
+HMS1819$meds_5 
+
+##meds_6
+HMS1819$meds_6 
+
+##meds_7
+HMS1819$meds_7 
+
+##meds_8
+HMS1819$meds_8
+
+##meds_9
+HMS1819$meds_9 
+
+
+############### 2019-2020
+
+##meds_1
+HMS1920$meds_1 #of class character
+HMS1920$meds_1[HMS1920$meds_1 == "0"]
+#Convert to numeric/binary
+HMS1920$meds_1 <- ifelse(nchar(HMS1920$meds_1) > 0, 1, NA)
+
+
+##meds_2
+HMS1920$meds_2
+#Convert to numeric/binary
+HMS1920$meds_2 <- ifelse(nchar(HMS1920$meds_2) > 0, 1, NA)
+
+##meds_3
+HMS1920$meds_3
+#Convert to numeric/binary
+HMS1920$meds_3 <- ifelse(nchar(HMS1920$meds_3) > 0, 1, NA)
+
+##meds_4
+HMS1920$meds_4
+#Convert to numeric/binary
+HMS1920$meds_4 <- ifelse(nchar(HMS1920$meds_4) > 0, 1, NA)
+
+##meds_5
+HMS1920$meds_5
+#Convert to numeric/binary
+HMS1920$meds_5 <- ifelse(nchar(HMS1920$meds_5) > 0, 1, NA)
+
+##meds_6
+HMS1920$meds_6
+#Convert to numeric/binary
+HMS1920$meds_6 <- ifelse(nchar(HMS1920$meds_6) > 0, 1, NA)
+
+##meds_7
+HMS1920$meds_7
+#Convert to numeric/binary
+HMS1920$meds_7 <- ifelse(nchar(HMS1920$meds_7) > 0, 1, NA)
+
+##meds_8
+HMS1920$meds_8
+#Convert to numeric/binary
+HMS1920$meds_8 <- ifelse(nchar(HMS1920$meds_8) > 0, 1, NA)
+
+##meds_9
+HMS1920$meds_9
+#Convert to numeric/binary
+HMS1920$meds_9 <- ifelse(nchar(HMS1920$meds_9) > 0, 1, NA)
+
+############ 2020-2021
+
+##meds_1
+HMS2021$meds_1
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_1 <- ifelse(nchar(HMS2021$meds_1) > 1, 1, NA)
+
+##meds_2
+HMS2021$meds_2
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_2 <- ifelse(nchar(HMS2021$meds_2) > 1, 1, NA)
+
+##meds_3
+HMS2021$meds_3
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_3 <- ifelse(nchar(HMS2021$meds_3) > 1, 1, NA)
+
+##meds_4
+HMS2021$meds_4
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_4 <- ifelse(nchar(HMS2021$meds_4) > 1, 1, NA)
+
+##meds_5
+HMS2021$meds_5
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_5 <- ifelse(nchar(HMS2021$meds_5) > 1, 1, NA)
+
+##meds_6
+HMS2021$meds_6
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_6 <- ifelse(nchar(HMS2021$meds_6) > 1, 1, NA)
+
+##meds_7
+HMS2021$meds_7
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_7 <- ifelse(nchar(HMS2021$meds_7) > 1, 1, NA)
+
+##meds_8
+HMS2021$meds_8
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_8 <- ifelse(nchar(HMS2021$meds_8) > 1, 1, NA)
+
+##meds_9
+HMS2021$meds_9
+#Convert all text to "1" and "0" for everything else
+HMS2021$meds_9 <- ifelse(nchar(HMS2021$meds_9) > 1, 1, NA)
+
+############## 2021-2022
+
+##meds_1
+HMS2122$meds_1
+
+##meds_2
+HMS2122$meds_2
+
+
+##meds_3
+HMS2122$meds_3
+
+##meds_4
+HMS2122$meds_4
+
+##meds_5
+HMS2122$meds_5
+
+##meds_6
+HMS2122$meds_6
+
+##meds_7
+HMS2122$meds_7
+
+##meds_8
+HMS2122$meds_8
+
+##meds_9
+HMS2122$meds_9
+
+
+############### 2022-2023
+
+##meds_1
+HMS2223$meds_1
+
+##meds_2
+HMS2223$meds_2
+
+##meds_3
+HMS2223$meds_3
+
+##meds_4
+HMS2223$meds_4
+
+##meds_5
+
+HMS2223$meds_5
+##meds_6
+
+HMS2223$meds_6
+##meds_7
+
+HMS2223$meds_7
+##meds_8
+
+HMS2223$meds_8
+##meds_9
+
+HMS2223$meds_9
+
+################# 2023-2024
+
+##meds_1
+HMS2324$meds_1
+
+##meds_2
+HMS2324$meds_2
+
+##meds_3
+HMS2324$meds_3
+
+##meds_4
+HMS2324$meds_4
+
+##meds_5
+HMS2324$meds_5
+
+##meds_6
+HMS2324$meds_6
+
+##meds_7
+HMS2324$meds_7
+
+##meds_8
+HMS2324$meds_8
+
+##meds_9
+HMS2324$meds_9
+
+################ Informal Help Seeking Variable - SELECT ALL THAT APPLY
+
+### 2015-2016
+
+HMS1516$inf_1 
+HMS1516$inf_2
+HMS1516$inf_3
+HMS1516$inf_4
+HMS1516$inf_5
+HMS1516$inf_6
+HMS1516$inf_7
+HMS1516$inf_8
+
+### 2016-2017
+
+HMS1617$inf_1#character -> need to convert to binary 0/1
+
+table(HMS1617$inf_1) #there are "0" responses, so if the number of characters is greater 
+# than 1, convert to 1, else, convert to NA
+
+table(HMS1617$inf_2)
+HMS1617$inf_1 <- ifelse(nchar(HMS1617$inf_1) > 1, 1, NA)
+HMS1617$inf_2 <- ifelse(nchar(HMS1617$inf_2) > 1, 1, NA)
+HMS1617$inf_3 <- ifelse(nchar(HMS1617$inf_3) > 1, 1, NA)
+HMS1617$inf_4 <- ifelse(nchar(HMS1617$inf_4) > 1, 1, NA)
+HMS1617$inf_5 <- ifelse(nchar(HMS1617$inf_5) > 1, 1, NA)
+HMS1617$inf_6 <- ifelse(nchar(HMS1617$inf_6) > 1, 1, NA)
+HMS1617$inf_7 <- ifelse(nchar(HMS1617$inf_7) > 1, 1, NA)
+HMS1617$inf_8 <- ifelse(nchar(HMS1617$inf_8) > 1, 1, NA)
+
+HMS1617$inf_2
+HMS1617$inf_3
+
+### 2017-2018
+
+HMS1718$inf_1
+HMS1718$inf_2
+
+HMS1718$inf_3
+HMS1718$inf_4 
+HMS1718$inf_5 
+HMS1718$inf_6 
+HMS1718$inf_7 
+HMS1718$inf_8
+
+### 2018-2019
+
+HMS1819$inf_1 
+
+HMS1819$inf_2
+HMS1819$inf_3 
+HMS1819$inf_4 
+HMS1819$inf_5
+HMS1819$inf_6 
+HMS1819$inf_7
+HMS1819$inf_8
+
+### 2019-2020
+
+table(HMS1920$inf_1)
+HMS1920$inf_1
+HMS1920$inf_2
+HMS1920$inf_3
+
+HMS1920$inf_1#character vector, need to convert to binary 0/1
+
+
+HMS1920$inf_1 <- ifelse(HMS1920$inf_1 == "1", 1, NA)
+HMS1920$inf_2 <- ifelse(HMS1920$inf_2 == "1", 1, NA)
+HMS1920$inf_3 <- ifelse(HMS1920$inf_3 == "1", 1, NA)
+HMS1920$inf_4 <- ifelse(HMS1920$inf_4 == "1", 1, NA)
+HMS1920$inf_5 <- ifelse(HMS1920$inf_5 == "1", 1, NA)
+HMS1920$inf_6 <- ifelse(HMS1920$inf_6 == "1", 1, NA)
+HMS1920$inf_7 <- ifelse(HMS1920$inf_7 == "1", 1, NA)
+HMS1920$inf_8 <- ifelse(HMS1920$inf_8 == "1", 1, NA)
+
+
+### 2020-2021
+
+HMS2021$inf_1 #character vector, need to convert to binary 0/1
+table(HMS2021$inf_1)
+HMS2021$inf_1[HMS2021$inf_1 == "No"]
+HMS2021$inf_1 <- ifelse(HMS2021$inf_1 == "Roommate", 1, NA) #I feel like this may be correct but it's missing people who responded "yes" or "no"
+
+HMS2021$inf_2 <- ifelse(HMS2021$inf_2 == "Friend (who is not a roommate)", 1, NA)
+
+HMS2021$inf_3 <- ifelse(HMS2021$inf_3 == "Significant other", 1, NA)
+
+HMS2021$inf_4 <- ifelse(HMS2021$inf_4 == "Family member", 1, NA)
+
+HMS2021$inf_5 <- ifelse(HMS2021$inf_5 == "Religious counselor or other religious contact", 1, NA)
+
+HMS2021$inf_6 <- ifelse(HMS2021$inf_6 == "Support group", 1, NA)
+
+HMS2021$inf_7 <- ifelse(HMS2021$inf_7 == "Other non-clinical source (please specify)", 1, NA)
+
+HMS2021$inf_8 <- ifelse(HMS2021$inf_8 == "No, none of these", 1, NA)
+
+HMS2021$inf_9 <- ifelse(HMS2021$inf_9 == "Faculty member/professor", 1, NA)
+
+HMS2021$inf_10 <- ifelse(HMS2021$inf_10 == "Staff member", 1, NA)
+
+
+HMS2021$inf_1
+HMS2021$inf_2
+HMS2021$inf_3
+HMS2021$inf_4
+HMS2021$inf_5
+HMS2021$inf_6
+HMS2021$inf_7
+HMS2021$inf_8
+HMS2021$inf_9
+HMS2021$inf_10
+
+#add inf_9 and inf_10 to inf_7 because they are "other non-clinical sources"
+# and they are not present in previous years. 
+HMS2021$inf_7 <- ifelse(HMS2021$inf_7 == 1 | HMS2021$inf_9 == 1 | HMS2021$inf_10 == 1, 1, NA)
+
+HMS2021$inf_7
+
+##################### 2021-2022
+
+HMS2122$inf_1
+
+HMS2122$inf_2
+HMS2122$inf_3
+HMS2122$inf_4
+HMS2122$inf_5
+HMS2122$inf_6
+HMS2122$inf_7
+HMS2122$inf_8
+HMS2122$inf_9
+HMS2122$inf_10
+
+#add inf_9 and inf_10 to inf_7 because they are "other non-clinical sources"
+# and they are not present in previous years. 
+HMS2122$inf_7 <- ifelse(HMS2122$inf_7 == 1 | HMS2122$inf_9 == 1 | HMS2122$inf_10 == 1, 1, NA)
+
+
+################ 2022-2023
+
+HMS2223$inf_1
+HMS2223$inf_2
+HMS2223$inf_3
+HMS2223$inf_4
+HMS2223$inf_5
+HMS2223$inf_6
+HMS2223$inf_7
+HMS2223$inf_8
+HMS2223$inf_9
+HMS2223$inf_10
+
+#add inf_9 and inf_10 to inf_7 because they are "other non-clinical sources"
+# and they are not present in previous years. 
+HMS2223$inf_7 <- ifelse(HMS2223$inf_7 == 1 | HMS2223$inf_9 == 1 | HMS2223$inf_10 == 1, 1, NA)
+
+
+
+### 2023-2024
+HMS2324$inf_1 
+HMS2324$inf_2
+HMS2324$inf_3
+HMS2324$inf_4
+HMS2324$inf_5
+HMS2324$inf_6
+HMS2324$inf_7
+HMS2324$inf_8
+HMS2324$inf_9
+HMS2324$inf_10
+
+#add inf_9 and inf_10 to inf_7 because they are "other non-clinical sources"
+# and they are not present in previous years. 
+HMS2324$inf_7 <- ifelse(HMS2324$inf_7 == 1 | HMS2324$inf_9 == 1 | HMS2324$inf_10 == 1, 1, NA)
+
+
+
+############### Currently Receiving Therapy Variable 
+
+### 2014-2015
+HMS1415$ther_cur #not taking 0's away here because they mean something different than NA
+
+### 2015-2016
+HMS1516$ther_cur
+
+### 2016-2017
+HMS1617$ther_cur
+
+### 2017-2018
+HMS1718$ther_cur
+
+### 2018-2019
+HMS1819$ther_cur
+
+### 2019-2020
+HMS1920$ther_cur #need to convert to 0/1/NA class numeric
+HMS1920$ther_cur <- ifelse(HMS1920$ther_cur == "1", 1, ifelse(HMS1920$ther_cur == "0",0,NA))
+HMS1920$ther_cur
+
+### 2020-2021
+HMS2021$ther_cur
+
+### 2021-2022
+HMS2122$ther_cur
+
+### 2022-2023
+HMS2223$ther_cur
+
+### 2023-2024
+HMS2324$ther_cur
+
+################## Create Informal and Formal Service Use Variables
+
+##### Informal Service Use Variable -- if any of the inf_1 - inf_7 variables are true,
+##### Informal service use variable == 1. If inf_8 is chosen, informal == 0. If none of them
+##### are selected, informal == NA
+
+
+##2015-2016
+HMS1516 <- HMS1516 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS1516$informal
+
+##2016-2017
+HMS1617 <- HMS1617 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS1617$informal
+
+##2017-2018
+HMS1718 <- HMS1718 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+
+HMS1718$informal
+
+##2018-2019
+HMS1819 <- HMS1819 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS1819$informal
+
+##2019-2020
+HMS1920 <- HMS1920 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS1920$informal
+
+##2020-2021
+HMS2021 <- HMS2021 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS2021$informal
+
+##2021-2022
+HMS2122 <- HMS2122 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS2122$informal
+
+##2022-2023
+HMS2223 <- HMS2223 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+
+HMS2223$informal
+##2023-2024
+HMS2324 <- HMS2324 %>% mutate(informal = case_when(
+  inf_1 == 1 | inf_2 == 1 | inf_3 == 1 | inf_4 == 1 | inf_5 == 1 | inf_6 == 1 |
+    inf_7 == 1 ~ 1,
+  inf_8 == 1 ~ 0,
+  inf_1 == NA & inf_2 == NA & inf_3 == NA & inf_4 == NA & inf_5 == NA & inf_6 == NA &
+    inf_7 == NA & inf_8 == NA ~ NA
+))
+HMS2324$informal
+
+
+######## Formal Service Use Variable -- if student is currently in therapy and has used
+######## Antipsychotic medication in the past 12 months. Ther_cur is conditional, meds_3
+######## is not. If ther_cur = NA and meds_3 = NA, formal = NA
+
+
+
+##2015-2016
+
+HMS1516 <- HMS1516 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+table(HMS1516$formal)
+
+##2016-2017
+
+HMS1617 <- HMS1617 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS1617$formal
+table(HMS1617$formal)
+
+
+##2017-2018
+
+HMS1718 <- HMS1718 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS1718$formal
+table(HMS1718$formal)
+
+
+##2018-2019
+
+HMS1819 <- HMS1819 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS1819$formal
+table(HMS1819$formal)
+
+
+
+##2019-2020
+
+HMS1920 <- HMS1920 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS1920$formal
+table(HMS1920$formal)
+
+
+##2020-2021
+
+HMS2021 <- HMS2021 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS2021$formal
+table(HMS2021$formal)
+
+
+
+##2021-2022
+
+HMS2122 <- HMS2122 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS2122$formal
+table(HMS2122$formal)
+
+
+
+##2022-2023
+
+HMS2223 <- HMS2223 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS2223$formal
+table(HMS2223$formal)
+
+
+
+##2023-2024
+
+HMS2324 <- HMS2324 %>% mutate(formal = case_when(
+  ther_cur == 1 & meds_3 == 1 ~ 1,
+  ther_cur == 0 | meds_3 == 0 ~ 0,
+  is.na(ther_cur) | is.na(meds_3) ~ NA
+))
+
+HMS2324$formal
+table(HMS2324$formal)
+
+###################################################### AGE variable
+# create a categorical variable for age groups
+# use case_when
+
+#### 2015-2016
+HMS1516$age
+HMS1516 <- HMS1516 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+  ))
+table(HMS1516$age.cat)
+
+#### 2016-2017
+HMS1617$age
+HMS1617 <- HMS1617 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS1617$age.cat)
+
+#### 2017-2018
+HMS1718$age
+HMS1718 <- HMS1718 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS1718$age.cat)
+
+#### 2018-2019
+HMS1819$age
+HMS1819 <- HMS1819 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS1819$age.cat)
+
+#### 2019-2020
+HMS1920$age
+HMS1920 <- HMS1920 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS1920$age.cat)
+
+#### 2020-2021
+HMS2021$age
+HMS2021 <- HMS2021 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS2021$age.cat)
+
+#### 2021-2022
+HMS2122$age
+HMS2122 <- HMS2122 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS2122$age.cat)
+
+#### 2022-2023
+HMS2223$age
+HMS2223 <- HMS2223 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+table(HMS2223$age.cat)
+
+#### 2023-2024
+HMS2324$age
+HMS2324 <- HMS2324 %>% mutate(age.cat = case_when(
+  age >= 18 & age <= 21 ~ "18-21",
+  age >= 22 & age <= 25 ~ "22-25",
+  age >= 26 & age <= 30 ~ "26-30",
+  age >= 31 ~ "31+",
+  is.na(age) ~ NA
+))
+
+
+####################################### YEAR variable - to keep track of years once we rbind
+HMS1516 <- HMS1516 %>% mutate(year = "2015-2016")
+HMS1617 <- HMS1617 %>% mutate(year = "2016-2017")
+HMS1718 <- HMS1718 %>% mutate(year = "2017-2018")
+HMS1819 <- HMS1819 %>% mutate(year = "2018-2019")
+HMS1920 <- HMS1920 %>% mutate(year = "2019-2020")
+HMS2021 <- HMS2021 %>% mutate(year = "2020-2021")
+HMS2122 <- HMS2122 %>% mutate(year = "2021-2022")
+HMS2223 <- HMS2223 %>% mutate(year = "2022-2023")
+HMS2324 <- HMS2324 %>% mutate(year = "2023-2024")
+
+############################################ N.Asked.Why
+### N asked why variable to count the number of people who were shown the why_tx variables
+
+###########2015-2016
+
+HMS1516$ther_any
+HMS1516$why_tx_1
+
+HMS1516 <- HMS1516 %>% mutate(n.asked.why = case_when(
+  (ther_any == 1) | (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+                       meds_7 == 1) ~1,
+  (ther_any == 0 | is.na(ther_any)) | (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+                                       & is.na(meds_6) & is.na(meds_7)) ~ 0
+))
+table(HMS1516$n.asked.why)
+
+########### 2016-2017
+
+
+
+#Conditional on ther_ever - change format
+
+HMS1617$ther_ever[HMS1617$ther_ever == "No, never"] <- 1
+HMS1617$ther_ever[HMS1617$ther_ever == "Yes, prior to starting college"] <- 2
+HMS1617$ther_ever[HMS1617$ther_ever == "Yes, since starting college"] <- 3
+HMS1617$ther_ever[HMS1617$ther_ever == "Yes, both of the above (prior to college and since starting college)"] <- 4
+HMS1617$ther_ever[HMS1617$ther_ever == "0" | HMS1617$ther_ever == ""] <- NA
+HMS1617$ther_ever <- as.numeric(HMS1617$ther_ever)
+HMS1617$ther_ever
+
+#Conditional on ther_vis
+HMS1617$ther_vis[HMS1617$ther_vis == "0"] <- 0
+HMS1617$ther_vis[HMS1617$ther_vis == "1-3"] <- 1
+HMS1617$ther_vis[HMS1617$ther_vis == "4-6"] <- 2
+HMS1617$ther_vis[HMS1617$ther_vis == "7-9"] <- 3
+HMS1617$ther_vis[HMS1617$ther_vis == "10 or more"] <- 4
+HMS1617$ther_vis[HMS1617$ther_vis == ""] <- NA
+
+HMS1617$ther_ever
+
+#N.asked.why
+HMS1617 <- HMS1617 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+table(HMS1617$n.asked.why)
+
+############# 2017-2018
+HMS1718$ther_ever
+HMS1718$ther_vis
+HMS1718$meds_1
+
+HMS1718 <- HMS1718 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+HMS1718$n.asked.why
+
+################ 2018-2019
+HMS1819$ther_ever
+HMS1819$ther_vis
+
+HMS1819 <- HMS1819 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+HMS1819$n.asked.why
+
+################### 2019-2020
+HMS1920$ther_ever <- as.numeric(HMS1920$ther_ever)
+HMS1920$ther_ever
+HMS1920$ther_vis <- as.numeric(HMS1920$ther_vis)
+HMS1920$ther_vis
+
+HMS1920 <- HMS1920 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+table(HMS1920$n.asked.why)
+
+################### 2020-2021
+HMS2021$ther_ever
+
+#Conditional on ther_ever - change format
+
+HMS2021$ther_ever[HMS2021$ther_ever == "No, never"] <- 1
+HMS2021$ther_ever[HMS2021$ther_ever == "Yes, prior to starting college"] <- 2
+HMS2021$ther_ever[HMS2021$ther_ever == "Yes, since starting college"] <- 3
+HMS2021$ther_ever[HMS2021$ther_ever == "Yes, both of the above (prior to college and since starting college)"] <- 4
+HMS2021$ther_ever[HMS2021$ther_ever == "0" | HMS2021$ther_ever == ""] <- NA
+HMS2021$ther_ever <- as.numeric(HMS2021$ther_ever)
+HMS2021$ther_ever
+
+#Conditional on ther_vis
+HMS2021$ther_vis
+
+HMS2021$ther_vis[HMS2021$ther_vis == "0"] <- 0
+HMS2021$ther_vis[HMS2021$ther_vis == "3-Jan"] <- 1
+HMS2021$ther_vis[HMS2021$ther_vis == "6-Apr"] <- 2
+HMS2021$ther_vis[HMS2021$ther_vis == "9-Jul"] <- 3
+HMS2021$ther_vis[HMS2021$ther_vis == "10 or more"] <- 4
+HMS2021$ther_vis[HMS2021$ther_vis == ""] <- NA
+
+HMS2021$ther_vis <- as.numeric(HMS2021$ther_vis)
+HMS2021$ther_vis
+
+
+HMS2021 <- HMS2021 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+table(HMS2021$n.asked.why)
+
+############## 2021-2022
+HMS2122$ther_ever
+HMS2122$ther_vis
+
+HMS2122 <- HMS2122 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+
+############## 2022-2023
+HMS2223$ther_ever
+HMS2223$ther_vis
+
+HMS2223 <- HMS2223 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+
+############### 2023-2024
+HMS2324$ther_ever
+HMS2324$ther_vis
+
+HMS2324 <- HMS2324 %>% mutate(n.asked.why = case_when(
+  ((ther_ever == 2 | ther_ever == 3| ther_ever == 4) & (ther_vis != 0 & !is.na(ther_vis))) | 
+    (meds_1 ==1 | meds_2 == 1 | meds_3 == 1 | meds_4 == 1 | meds_5 == 1 | meds_6 == 1 |
+       meds_7 == 1) ~ 1,
+  ((ther_ever == 1 | is.na(ther_ever)) | (ther_vis == 0 | is.na(ther_vis)) | 
+     (is.na(meds_1) & is.na(meds_2) & is.na(meds_3) & is.na(meds_4) & is.na(meds_5)
+      & is.na(meds_6) & is.na(meds_7))) ~ 0
+  
+))
+
+
+############################################ Considerations for Calculating Sample Size
+
+############ ther_help_me & meds_help_me in elective module 8 - 
+############ create a variable that counts whether a student
+############ was shown elective module 8.
+############ 2022-2024 --> "KnowAtt" variable
+############ 2021 & prior --> check whether student has data for first question in module
+
+#### 2015-2016
+
+HMS1516$know_sp
+
+HMS1516 <- HMS1516 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+HMS1516$mod.8.count
+
+
+#### 2016-2017
+HMS1617$know_sp #convert to numeric format
+HMS1617$know_sp[HMS1617$know_sp == "Well below average"] <- 5
+HMS1617$know_sp[HMS1617$know_sp == "Below average"] <- 4
+HMS1617$know_sp[HMS1617$know_sp == "Average"] <- 3
+HMS1617$know_sp[HMS1617$know_sp == "Above average"] <- 2
+HMS1617$know_sp[HMS1617$know_sp == "Well above average"] <- 1
+HMS1617$know_sp[HMS1617$know_sp == ""] <- NA
+
+HMS1617$know_sp <- as.numeric(HMS1617$know_sp)
+HMS1617$know_sp
+
+HMS1617 <- HMS1617 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+
+HMS1617$mod.8.count
+
+##### 2017-2018
+HMS1718$know_sp
+
+HMS1718 <- HMS1718 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+
+HMS1718$mod.8.count
+
+##### 2018-2019
+HMS1819$know_sp
+
+HMS1819 <- HMS1819 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+
+HMS1819$mod.8.count
+
+##### 2019-2020
+HMS1920$know_sp <- as.numeric(HMS1920$know_sp)
+table(HMS1920$know_sp)
+
+HMS1920 <- HMS1920 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+
+HMS1920$mod.8.count
+
+##### 2020-2021
+HMS2021$know_sp[HMS2021$know_sp == "Well above average"] <- 1
+HMS2021$know_sp[HMS2021$know_sp == "Above average"] <- 2
+HMS2021$know_sp[HMS2021$know_sp == "Average"] <- 3
+HMS2021$know_sp[HMS2021$know_sp == "Below average"] <- 4
+HMS2021$know_sp[HMS2021$know_sp == "Well below average"] <- 5
+HMS2021$know_sp[HMS2021$know_sp == ""] <- NA
+
+HMS2021$know_sp <- as.numeric(HMS2021$know_sp)
+HMS2021$know_sp
+
+HMS2021 <- HMS2021 %>% mutate(mod.8.count = case_when(
+  (!is.na(know_sp)) ~ 1,
+  (is.na(know_sp)) ~ 0
+))
+
+HMS2021$mod.8.count
+
+#####2021 - 2022
+
+HMS2122$knowatt[HMS2122$knowatt== "No"] <- 0
+HMS2122$knowatt[HMS2122$knowatt == "Yes"] <- 1
+HMS2122$knowatt[HMS2122$knowatt == ""] <- NA
+
+HMS2122$knowatt <- as.numeric(HMS2122$knowatt)
+
+HMS2122$knowatt
+
+HMS2122 <- HMS2122 %>% mutate(mod.8.count = case_when(
+  knowatt == 1 ~ 1,
+  (knowatt == 0 | is.na(knowatt)) ~ 0
+))
+
+HMS2122$mod.8.count
+
+
+##### 2022-2023
+
+HMS2223$knowatt[HMS2223$knowatt == "Yes"] <- 1
+HMS2223$knowatt[HMS2223$knowatt == "No"] <- 0
+HMS2223$knowatt[HMS2223$knowatt == ""] <- NA
+
+HMS2223$knowatt <- as.numeric(HMS2223$knowatt)
+HMS2223$knowatt
+
+HMS2223 <- HMS2223 %>% mutate(mod.8.count = case_when(
+  knowatt == 1 ~ 1,
+  (knowatt == 0 | is.na(knowatt)) ~ 0
+))
+
+HMS2223$mod.8.count
+
+##### 2023-2024
+HMS2324$KnowAtt[HMS2324$KnowAtt == "Yes"] <- 1
+HMS2324$KnowAtt[HMS2324$KnowAtt == "No"] <- 0
+HMS2324$KnowAtt[HMS2324$KnowAtt == ""] <- NA
+
+HMS2324$KnowAtt <- as.numeric(HMS2324$KnowAtt)
+HMS2324$KnowAtt
+
+HMS2324 <- HMS2324 %>% mutate(mod.8.count = case_when(
+  KnowAtt == 1 ~ 1,
+  (KnowAtt == 0 | is.na(KnowAtt)) ~ 0
+))
+
+HMS2324$mod.8.count
+
+
+#################################### NRWeight
+
+### those who respond in the study may not be fully representative of 
+### the population theyre studying
+### nr weight weights females vs males because females tend to respond more than males
+
+
+HMS1516$nrweight
+HMS1617$nrweight
+HMS1718$nrweight
+HMS1819$nrweight
+HMS1920$nrweight 
+HMS2021$nrweight
+HMS2122$nrweight
+HMS2223$nrweight
+HMS2324$nrweight
+
+### requires the responseid variable
+
+
+#################################### dx_psy variable
+####dx_psy
+
+HMS1516$dx_psy
+HMS1617$dx_psy
+HMS1718$dx_psy
+HMS1819$dx_psy
+HMS1920$dx_psy #change to numeric
+HMS1920$dx_psy <- as.numeric(HMS1920$dx_psy)
+HMS1920$dx_psy
+HMS2021$dx_psy
+HMS2122$dx_psy
+HMS2223$dx_psy
+HMS2324$dx_psy
+
+
+
+
+######################################## Create new dataset with rbind 
+
+psychosis <- rbind(HMS1516[, c("responseid", "year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                               "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                               "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                               "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                               "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                               "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                               "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                               "nrweight", "dx_psy", "age")],
+                   HMS1617[, c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                                 "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                                 "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                                 "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                                 "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                                 "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                                 "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                                 "nrweight", "dx_psy", "age")],
+                   HMS1718[, c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                                 "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                                 "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                                 "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                                 "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                                 "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                                 "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                                 "nrweight", "dx_psy", "age")],
+                   HMS1819[,c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                                "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                                "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                                "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                                "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                                "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                                "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                                "nrweight", "dx_psy", "age")],
+                   HMS1920[, c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                                 "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                                 "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                                 "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                                 "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                                 "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                                 "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                                 "nrweight", "dx_psy", "age")],
+                   HMS2021[, c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                               "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                               "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                               "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                               "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                               "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                               "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                               "nrweight", "dx_psy", "age")],
+                   HMS2122[,c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                              "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                              "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                              "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                              "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                              "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                              "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                              "nrweight", "dx_psy", "age")],
+                   HMS2223[,c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                              "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                              "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                              "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                              "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                              "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                              "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                              "nrweight", "dx_psy", "age")],
+                   HMS2324[,c("responseid","year", "race", "sex_birth", "percneed", "why_tx_1","why_tx_2",
+                              "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7",
+                              "why_tx_8", "why_tx_9", "ther_help_me", "meds_help_me",
+                              "meds_1", "meds_2", "meds_3", "meds_4", "meds_5", "meds_6",
+                              "meds_7", "meds_8", "meds_9", "inf_1", "inf_2", "inf_3", 
+                              "inf_4", "inf_5", "inf_6", "inf_7", "inf_8",
+                              "ther_cur", "informal", "formal", "age.cat", "mod.8.count", "n.asked.why",
+                              "nrweight", "dx_psy", "age")])
+
+save(psychosis, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.Rdata")
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.Rdata")
+
+
+
+###################################### Apply Survey Weighting #########################################
+#whether you use the psychosis only or full dataset first does not matter - weights
+# will be the same either way.
+#nr weight is non-response weight - we should research the details of this variable for when we write the
+# manuscript
+
+#load required packages
+install.packages('survey')
+install.packages(c("dplyr", "tibble", "gt", "survey"))
+install.packages("glue")
+packageVersion("glue")
+install.packages('gtsummary')
+library(survey)
+library(gtsummary)
+library(dplyr)
+
+
+
+
+################# Make a Table 1
+
+
+#### Subset dataset to just those who have psychosis. 
+
+#make a dataset that only contains records where dx_psy == 1
+psychosis.1 <- psychosis %>% filter(dx_psy == 1)
+
+
+#Exclude where nrweight and id are NA
+sum(is.na(psychosis.1$nrweight)) #none
+sum(is.na(psychosis.1$responseid)) #none
+
+## stratifying by formal or informal service use engagement
+## make a dummy variable that captures if either formal or informal was used and stratify by it.
+
+psychosis.1 <- psychosis.1 %>% mutate(service = case_when(
+  formal == 1 | informal == 1 ~ 1,
+  (is.na(formal) | formal == 0) & (is.na(informal) | informal == 0) ~ 0
+))
+
+save(psychosis.1, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+
+## create a column of scaled weights - without this the table 1 had a larger analytic sample
+## size than the actual sample size. So we are using this to scale the survey weights
+## so that the total weighted sample size is equal to the total unweighted sample size.
+
+## divide nrweight by (N in weighted sample/N in unweighted sample)
+
+div <- 4838.837/(nrow(psychosis.1))
+div
+
+sum(psychosis.1$nrweight)
+
+psychosis.1 <- psychosis.1 %>% mutate(scaled_weights = (nrweight/div))
+
+
+
+#SAVE psychosis.1 with scaled weights column
+save(psychosis.1, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+write.csv(psychosis.1, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/psychosis.csv", row.names = F)
+
+##create survey object
+library(survey)
+
+survey_object_1 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psychosis.1
+)
+
+survey_object_1
+
+##create table 1
+table1.psy.only <- survey_object_1 %>% tbl_svysummary(
+  by = service,
+  include = c("age.cat", "sex_birth", "race", "year", "formal", "informal", "why_tx_1", "why_tx_2"
+              , "why_tx_3", "why_tx_4", "why_tx_5", "why_tx_6", "why_tx_7", "why_tx_8", "why_tx_9",
+              "percneed", "ther_help_me", "meds_help_me"),
+  statistic = list(all_continuous() ~ "{mean} ({sd})", all_categorical()~ "{n} ({p}%)"),
+  digits = list(all_continuous() ~c(1,1), all_categorical() ~ c(0,1))
+)
+
+table1.psy.only
+
+table1.psy.only.p <- add_p(
+                          table1.psy.only,
+                          test = list(all_continuous() ~ "svy.wilcox.test", all_categorical() ~ "svy.chisq.test"),
+                          pvalue_fun = label_style_pvalue(digits = 1),
+                          include = everything(),
+                          test.args = NULL,
+)
+
+table1.psy.only.p
+
+save(table1.psy.only.p, file = 'C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/table1.RData')
+
+################################### Sample Size Calculation ###################################
+
+#######total people in the psychosis dataset
+nrow(psychosis)
+
+#689,826
+
+#######total people in the psychosis dataset that have been diagnosed with psychosis
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+nrow(psychosis.1)
+
+#TOTAL N: Total students with psychosis = 2,737
+
+################### Formal Service Use Among Students with Psychosis
+
+#### Total number of students with psychosis with non-missing data for formal service use
+
+nrow(psychosis.1[!is.na(psychosis.1$formal),])
+
+# Total N (Formal): 1814
+
+##### Why_tx
+
+##Total number of participants with psychosis who are nonmissing for formal 
+## who were asked the why_tx series
+
+nrow(psychosis.1[!is.na(psychosis.1$formal) & psychosis.1$n.asked.why == 1,])
+
+#N% with psychosis with no missing data for formal service use, why_tx_1
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_1),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_2
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_2),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_3
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_3),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_4
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_4),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_5
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_5),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_6
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_6),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_7
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_7),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_8
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_8),])
+
+#N% with psychosis with no missing data for formal service use, why_tx_9
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$why_tx_9),])
+
+##### Perceived Need for Help
+
+table(psychosis.1$percneed)
+
+#N% with psychosis with no missing data for formal service use, percneed lv1
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 1,])
+
+#N% with psychosis with no missing data for formal service use, percneed lv2
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 2,])
+
+#N% with psychosis with no missing data for formal service use, percneed lv3
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 3,])
+
+#N% with psychosis with no missing data for formal service use, percneed lv4
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 4,])
+
+#N% with psychosis with no missing data for formal service use, percneed lv5
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 5,])
+
+#N% with psychosis with no missing data for formal service use, percneed lv6
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 6,])
+
+
+##### Perception of How Helpful Medication is
+
+## N asked --> those who have psychosis with nonmissing data for formal and who saw module 8
+nrow(psychosis.1[!is.na(psychosis.1$formal) & psychosis.1$mod.8.count == 1,])
+
+
+#N% with psychosis with no missing data for formal service use, meds_help_me lv1
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 1,])
+
+#N% with psychosis with no missing data for formal service use, meds_help_me lv2
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 2,])
+
+#N% with psychosis with no missing data for formal service use, meds_help_me lv3
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 3,])
+
+#N% with psychosis with no missing data for formal service use, meds_help_me lv4
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 4,])
+
+##### Perception of How Helpful Therapy is
+
+## N asked --> those who have psychosis with nonmissing data for formal and who saw module 8
+nrow(psychosis.1[!is.na(psychosis.1$formal) & psychosis.1$mod.8.count == 1,])
+
+#N% with psychosis with no missing data for formal service use, ther_help_me lv1
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 1,])
+
+#N% with psychosis with no missing data for formal service use, ther_help_me lv2
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 2,])
+
+#N% with psychosis with no missing data for formal service use, ther_help_me lv3
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 3,])
+
+#N% with psychosis with no missing data for formal service use, ther_help_me lv4
+nrow(psychosis.1[!is.na(psychosis.1$formal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 4,])
+
+
+################### Informal Service Use Among Students with Psychosis
+
+#### Total number of students with psychosis with non-missing data for informal service use
+
+
+nrow(psychosis.1[!is.na(psychosis.1$informal),])
+
+# Total N (informal): 2594
+
+##### Why_tx
+
+psychosis.1$sex_birth
+
+##Total number of participants with psychosis who are nonmissing for informal 
+## who were asked the why_tx series
+nrow(psychosis.1[!is.na(psychosis.1$informal) & psychosis.1$n.asked.why == 1,])
+
+#N% with psychosis with no missing data for informal service use, why_tx_1
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_1),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_2
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_2),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_3
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_3),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_4
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_4),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_5
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_5),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_6
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_6),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_7
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_7),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_8
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_8),])
+
+#N% with psychosis with no missing data for informal service use, why_tx_9
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$why_tx_9),])
+
+##### Perceived Need for Help
+
+table(psychosis.1$percneed)
+
+#N% with psychosis with no missing data for informal service use, percneed lv1
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 1,])
+
+#N% with psychosis with no missing data for informal service use, percneed lv2
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 2,])
+
+#N% with psychosis with no missing data for informal service use, percneed lv3
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 3,])
+
+#N% with psychosis with no missing data for informal service use, percneed lv4
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 4,])
+
+#N% with psychosis with no missing data for informal service use, percneed lv5
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 5,])
+
+#N% with psychosis with no missing data for informal service use, percneed lv6
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$percneed)
+                 & psychosis.1$percneed == 6,])
+
+##### Perception of How Helpful Medication is
+
+## N asked --> those who have psychosis with nonmissing data for informal and who saw module 8
+nrow(psychosis.1[!is.na(psychosis.1$informal) & psychosis.1$mod.8.count == 1,])
+
+table(psychosis.1$meds_help_me)
+
+#N% with psychosis with no missing data for informal service use, meds_help_me lv 1
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 1,])
+
+#N% with psychosis with no missing data for informal service use, meds_help_me lv 2
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 2,])
+
+#N% with psychosis with no missing data for informal service use, meds_help_me lv 3
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 3,])
+
+#N% with psychosis with no missing data for informal service use, meds_help_me lv 4
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$meds_help_me)
+                 & psychosis.1$meds_help_me == 4,])
+
+##### Perception of How Helpful Therapy is
+
+## N asked --> those who have psychosis with nonmissing data for informal and who saw module 8
+nrow(psychosis.1[!is.na(psychosis.1$informal) & psychosis.1$mod.8.count == 1,])
+
+table(psychosis.1$ther_help_me)
+
+#N% with psychosis with no missing data for informal service use, ther_help_me lv 1
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 1,])
+
+#N% with psychosis with no missing data for informal service use, ther_help_me lv 2
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 2,])
+
+#N% with psychosis with no missing data for informal service use, ther_help_me lv 3
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 3,])
+
+#N% with psychosis with no missing data for informal service use, ther_help_me lv 1
+nrow(psychosis.1[!is.na(psychosis.1$informal) & !is.na(psychosis.1$ther_help_me)
+                 & psychosis.1$ther_help_me == 4,])
+
+
+##### NOTE: The above calculations do not apply survey weights to table calculations, and finds N
+##### rather than weighted percentages. Weighted percentages were calculated for Table 1 using STATA.
+
+
+
+################################# LOGISTIC REGRESSIONS
+
+### Create a new set of why_tx variables that is 0/1 not 1/NA.
+### new variables will be 0 if they were treated (aka if n.asked.why = 1) and 1 if why_tx of interest is 1
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis.1.Rdata")
+
+
+library(dplyr)
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_1_new = case_when(
+  why_tx_1 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_2_new = case_when(
+  why_tx_2 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+    n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_3_new = case_when(
+  why_tx_3 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_4_new = case_when(
+  why_tx_4 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_5_new = case_when(
+  why_tx_5 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_6_new = case_when(
+  why_tx_6 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+table(psychosis.1$why_tx_6)
+table(psychosis.1$why_tx_6_new)
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_7_new = case_when(
+  why_tx_7 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_8_new = case_when(
+  why_tx_8 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1 <- psychosis.1 %>% mutate(why_tx_9_new = case_when(
+  why_tx_9 == 1 ~ 1,
+  n.asked.why == 1 ~ 0,
+  n.asked.why == 0 ~ NA
+))
+
+psychosis.1
+
+###We need to re-create the survey object with NA's removed in the response variables
+### because svyglm function does not automatically remove missings like glm function.
+
+# Remove NA's in response variables
+psychosis_clean <- subset(psychosis.1, !is.na(informal) & !is.na(formal))
+
+psychosis_clean
+
+
+table(psychosis_clean$formal)
+
+#make percneed into a factor
+psychosis_clean$percneed <- as.factor(psychosis_clean$percneed)
+
+#make meds_help_me into a factor
+psychosis_clean$meds_help_me <- as.factor(psychosis_clean$meds_help_me)
+
+#make ther_help_me into a factor
+psychosis_clean$ther_help_me <- as.factor(psychosis_clean$ther_help_me)
+
+
+save(psychosis_clean, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis_clean.RData" )
+psychosis_clean
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Data/Data Frames/psychosis_clean.RData")
+
+#Create separate datasets for each regression where there is no NA's in the predictor
+# of interest and no NA's in the response
+
+psy.mhm <- subset(psychosis_clean, !is.na(meds_help_me))
+
+psy.thm <- subset(psychosis_clean, !is.na(ther_help_me))
+
+psy.pn <- subset(psychosis_clean, !is.na(percneed))
+psy.pn$informal <- as.factor(psy.pn$informal)
+
+psy.wtx1 <- subset(psychosis_clean, !is.na(why_tx_1_new))
+psy.wtx2 <- subset(psychosis_clean, !is.na(why_tx_2_new))
+psy.wtx3 <- subset(psychosis_clean, !is.na(why_tx_3_new))
+psy.wtx4 <- subset(psychosis_clean, !is.na(why_tx_4_new))
+psy.wtx5 <- subset(psychosis_clean, !is.na(why_tx_5_new))
+psy.wtx6 <- subset(psychosis_clean, !is.na(why_tx_6_new))
+psy.wtx7 <- subset(psychosis_clean, !is.na(why_tx_7_new))
+psy.wtx8 <- subset(psychosis_clean, !is.na(why_tx_8_new))
+psy.wtx9 <- subset(psychosis_clean, !is.na(why_tx_9_new))
+
+#create a survey object for meds_help_me
+
+library(survey)
+
+psy.mhm$sex_birth <- as.factor(psy.mhm$sex_birth)
+psy.mhm$race <- as.factor(psy.mhm$race)
+
+
+
+so_mhm <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.mhm
+)
+
+#create a survey object for ther_help_me
+
+psy.thm$sex_birth <- as.factor(psy.thm$sex_birth)
+psy.thm$race <- as.factor(psy.thm$race)
+
+so_thm <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.thm
+)
+
+#create a survey object for percneed
+
+psy.pn$sex_birth <- as.factor(psy.pn$sex_birth)
+psy.pn$race <- as.factor(psy.pn$race)
+
+so_pn <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.pn
+)
+
+#survey object for why_tx_1
+
+
+psy.wtx1$race <- as.factor(psy.wtx1$race)
+psy.wtx1$sex_birth <- as.factor(psy.wtx1$sex_birth)
+
+so_wtx1 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx1
+)
+
+#survey object for why_tx_2
+
+psy.wtx2$race <- as.factor(psy.wtx2$race)
+psy.wtx2$sex_birth <- as.factor(psy.wtx2$sex_birth)
+
+so_wtx2 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx2
+)
+
+#survey object for why_tx_3
+
+
+psy.wtx3$race <- as.factor(psy.wtx3$race)
+psy.wtx3$sex_birth <- as.factor(psy.wtx3$sex_birth)
+
+so_wtx3 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx3
+)
+
+#survey object for why_tx_4
+
+
+psy.wtx4$race <- as.factor(psy.wtx4$race)
+psy.wtx4$sex_birth <- as.factor(psy.wtx4$sex_birth)
+
+so_wtx4 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx4
+)
+
+#survey object for why_tx_5
+
+
+psy.wtx5$race <- as.factor(psy.wtx5$race)
+psy.wtx5$sex_birth <- as.factor(psy.wtx5$sex_birth)
+
+so_wtx5 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx5
+)
+
+#survey object for why_tx_6
+
+
+psy.wtx6$race <- as.factor(psy.wtx6$race)
+psy.wtx6$sex_birth <- as.factor(psy.wtx6$sex_birth)
+
+so_wtx6 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx6
+)
+
+table(psy.wtx6$why_tx_6_new)
+
+#survey object for why_tx_7
+
+psy.wtx7$race <- as.factor(psy.wtx7$race)
+psy.wtx7$sex_birth <- as.factor(psy.wtx7$sex_birth)
+
+so_wtx7 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx7
+)
+
+#survey object for why_tx_8
+
+psy.wtx8$race <- as.factor(psy.wtx8$race)
+psy.wtx8$sex_birth <- as.factor(psy.wtx8$sex_birth)
+
+so_wtx8 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx8
+)
+
+#survey object for why_tx_9
+
+psy.wtx9$race <- as.factor(psy.wtx9$race)
+psy.wtx9$sex_birth <- as.factor(psy.wtx9$sex_birth)
+
+so_wtx9 <- survey::svydesign(
+  id = ~responseid,
+  weights = ~scaled_weights,
+  data = psy.wtx9
+)
+
+############## Regression - Why_tx_1 - informal
+
+library(survey)
+
+mod_wtx1_inf <- svyglm(informal ~ why_tx_1_new + race + sex_birth, family = binomial, design = so_wtx1)
+summary(mod_wtx1_inf)
+OR_wtx1_inf <- exp(coef(mod_wtx1_inf))
+CI_wtx1_inf <- exp(confint(mod_wtx1_inf))
+
+#print OR and CI
+inf_OR_wtx1 <- data.frame(odds_ratios = OR_wtx1_inf, Lower_CI = CI_wtx1_inf[,1], Upper_CI = CI_wtx1_inf[,2])
+inf_OR_wtx1
+save(inf_OR_wtx1, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx1.RData")
+
+
+
+############## Regression - Why_tx_1 - formal
+
+
+mod_wtx1_formal <- svyglm(formal ~ why_tx_1_new + race + sex_birth, family = binomial, design = so_wtx1)
+summary(mod_wtx1_formal)
+OR_wtx1_formal <- exp(coef(mod_wtx1_formal))
+CI_wtx1_formal <- exp(confint(mod_wtx1_formal))
+
+#print OR and CI
+formal_OR_wtx1 <- data.frame(odds_ratios = OR_wtx1_formal, Lower_CI = CI_wtx1_formal[,1], Upper_CI = CI_wtx1_formal[,2])
+formal_OR_wtx1
+save(formal_OR_wtx1, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx1.RData")
+
+############## Regression - Why_tx_2 - informal
+
+mod_wtx2_inf <- svyglm(informal ~ why_tx_2_new + race + sex_birth, family = binomial, design = so_wtx2)
+summary(mod_wtx2_inf)
+OR_wtx2_inf <- exp(coef(mod_wtx2_inf))
+CI_wtx2_inf <- exp(confint(mod_wtx2_inf))
+
+#print OR and CI
+inf_OR_wtx2 <- data.frame(odds_ratios = OR_wtx2_inf, Lower_CI = CI_wtx2_inf[,1], Upper_CI = CI_wtx2_inf[,2])
+inf_OR_wtx2
+save(inf_OR_wtx2, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx2.RData")
+
+
+
+############## Regression - Why_tx_2 - formal
+
+
+mod_wtx2_formal <- svyglm(formal ~ why_tx_2_new + race + sex_birth, family = binomial, design = so_wtx2)
+summary(mod_wtx2_formal)
+OR_wtx2_formal <- exp(coef(mod_wtx2_formal))
+CI_wtx2_formal <- exp(confint(mod_wtx2_formal))
+
+#print OR and CI
+formal_OR_wtx2 <- data.frame(odds_ratios = OR_wtx2_formal, Lower_CI = CI_wtx2_formal[,1], Upper_CI = CI_wtx2_formal[,2])
+formal_OR_wtx2
+save(formal_OR_wtx2, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx2.RData")
+
+############## Regression - Why_tx_3 - informal
+
+mod_wtx3_inf <- svyglm(informal ~ why_tx_3_new + race + sex_birth, family = binomial, design = so_wtx3)
+summary(mod_wtx3_inf)
+OR_wtx3_inf <- exp(coef(mod_wtx3_inf))
+CI_wtx3_inf <- exp(confint(mod_wtx3_inf))
+
+#print OR and CI
+inf_OR_wtx3 <- data.frame(odds_ratios = OR_wtx3_inf, Lower_CI = CI_wtx3_inf[,1], Upper_CI = CI_wtx3_inf[,2])
+inf_OR_wtx3
+save(inf_OR_wtx3, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx3.RData")
+
+
+
+############## Regression - Why_tx_3 - formal
+
+
+mod_wtx3_formal <- svyglm(formal ~ why_tx_3_new + race + sex_birth, family = binomial, design = so_wtx3)
+summary(mod_wtx3_formal)
+OR_wtx3_formal <- exp(coef(mod_wtx3_formal))
+CI_wtx3_formal <- exp(confint(mod_wtx3_formal))
+
+#print OR and CI
+formal_OR_wtx3 <- data.frame(odds_ratios = OR_wtx3_formal, Lower_CI = CI_wtx3_formal[,1], Upper_CI = CI_wtx3_formal[,2])
+formal_OR_wtx3
+save(formal_OR_wtx3, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx3.RData")
+
+############## Regression - Why_tx_4 - informal
+
+mod_wtx4_inf <- svyglm(informal ~ why_tx_4_new + race + sex_birth, family = binomial, design = so_wtx4)
+summary(mod_wtx4_inf)
+OR_wtx4_inf <- exp(coef(mod_wtx4_inf))
+CI_wtx4_inf <- exp(confint(mod_wtx4_inf))
+
+#print OR and CI
+inf_OR_wtx4 <- data.frame(odds_ratios = OR_wtx4_inf, Lower_CI = CI_wtx4_inf[,1], Upper_CI = CI_wtx4_inf[,2])
+inf_OR_wtx4
+save(inf_OR_wtx4, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx4.RData")
+
+
+
+############## Regression - Why_tx_4 - formal
+
+
+mod_wtx4_formal <- svyglm(formal ~ why_tx_4_new + race + sex_birth, family = binomial, design = so_wtx4)
+summary(mod_wtx4_formal)
+OR_wtx4_formal <- exp(coef(mod_wtx4_formal))
+CI_wtx4_formal <- exp(confint(mod_wtx4_formal))
+
+#print OR and CI
+formal_OR_wtx4 <- data.frame(odds_ratios = OR_wtx4_formal, Lower_CI = CI_wtx4_formal[,1], Upper_CI = CI_wtx4_formal[,2])
+formal_OR_wtx4
+save(formal_OR_wtx4, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx4.RData")
+
+############## Regression - Why_tx_5 - informal
+
+mod_wtx5_inf <- svyglm(informal ~ why_tx_5_new + race + sex_birth, family = binomial, design = so_wtx5)
+summary(mod_wtx5_inf)
+OR_wtx5_inf <- exp(coef(mod_wtx5_inf))
+CI_wtx5_inf <- exp(confint(mod_wtx5_inf))
+
+#print OR and CI
+inf_OR_wtx5 <- data.frame(odds_ratios = OR_wtx5_inf, Lower_CI = CI_wtx5_inf[,1], Upper_CI = CI_wtx5_inf[,2])
+inf_OR_wtx5
+save(inf_OR_wtx5, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx5.RData")
+
+
+
+############## Regression - Why_tx_5 - formal
+
+
+mod_wtx5_formal <- svyglm(formal ~ why_tx_5_new + race + sex_birth, family = binomial, design = so_wtx5)
+summary(mod_wtx5_formal)
+OR_wtx5_formal <- exp(coef(mod_wtx5_formal))
+CI_wtx5_formal <- exp(confint(mod_wtx5_formal))
+
+#print OR and CI
+formal_OR_wtx5 <- data.frame(odds_ratios = OR_wtx5_formal, Lower_CI = CI_wtx5_formal[,1], Upper_CI = CI_wtx5_formal[,2])
+formal_OR_wtx5
+save(formal_OR_wtx5, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx5.RData")
+
+############## Regression - Why_tx_6 - informal
+
+mod_wtx6_inf <- svyglm(informal ~ why_tx_6_new + race + sex_birth, family = binomial, design = so_wtx6)
+summary(mod_wtx6_inf)
+OR_wtx6_inf <- exp(coef(mod_wtx6_inf))
+CI_wtx6_inf <- exp(confint(mod_wtx6_inf))
+
+#print OR and CI
+inf_OR_wtx6 <- data.frame(odds_ratios = OR_wtx6_inf, Lower_CI = CI_wtx6_inf[,1], Upper_CI = CI_wtx6_inf[,2])
+inf_OR_wtx6
+save(inf_OR_wtx6, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx6.RData")
+
+############## Regression - Why_tx_6 - formal
+
+
+mod_wtx6_formal <- svyglm(formal ~ why_tx_6_new + race + sex_birth, family = binomial, design = so_wtx6)
+summary(mod_wtx6_formal)
+OR_wtx6_formal <- exp(coef(mod_wtx6_formal))
+CI_wtx6_formal <- exp(confint(mod_wtx6_formal))
+
+#print OR and CI
+formal_OR_wtx6 <- data.frame(odds_ratios = OR_wtx6_formal, Lower_CI = CI_wtx6_formal[,1], Upper_CI = CI_wtx6_formal[,2])
+formal_OR_wtx6
+save(formal_OR_wtx6, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx6.RData")
+
+############## Regression - Why_tx_7 - informal
+
+mod_wtx7_inf <- svyglm(informal ~ why_tx_7_new + race + sex_birth, family = binomial, design = so_wtx7)
+summary(mod_wtx7_inf)
+OR_wtx7_inf <- exp(coef(mod_wtx7_inf))
+CI_wtx7_inf <- exp(confint(mod_wtx7_inf))
+
+#print OR and CI
+inf_OR_wtx7 <- data.frame(odds_ratios = OR_wtx7_inf, Lower_CI = CI_wtx7_inf[,1], Upper_CI = CI_wtx7_inf[,2])
+inf_OR_wtx7
+save(inf_OR_wtx7, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx7.RData")
+
+
+
+############## Regression - Why_tx_7 - formal
+
+
+mod_wtx7_formal <- svyglm(formal ~ why_tx_7_new + race + sex_birth, family = binomial, design = so_wtx7)
+summary(mod_wtx7_formal)
+OR_wtx7_formal <- exp(coef(mod_wtx7_formal))
+CI_wtx7_formal <- exp(confint(mod_wtx7_formal))
+
+#print OR and CI
+formal_OR_wtx7 <- data.frame(odds_ratios = OR_wtx7_formal, Lower_CI = CI_wtx7_formal[,1], Upper_CI = CI_wtx7_formal[,2])
+formal_OR_wtx7
+save(formal_OR_wtx7, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx7.RData")
+
+############## Regression - Why_tx_8 - informal
+
+mod_wtx8_inf <- svyglm(informal ~ why_tx_8_new + race + sex_birth, family = binomial, design = so_wtx8)
+summary(mod_wtx8_inf)
+OR_wtx8_inf <- exp(coef(mod_wtx8_inf))
+CI_wtx8_inf <- exp(confint(mod_wtx8_inf))
+
+#print OR and CI
+inf_OR_wtx8 <- data.frame(odds_ratios = OR_wtx8_inf, Lower_CI = CI_wtx8_inf[,1], Upper_CI = CI_wtx8_inf[,2])
+inf_OR_wtx8
+save(inf_OR_wtx8, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx8.RData")
+
+
+
+############## Regression - Why_tx_8 - formal
+
+
+mod_wtx8_formal <- svyglm(formal ~ why_tx_8_new + race + sex_birth, family = binomial, design = so_wtx8)
+summary(mod_wtx8_formal)
+OR_wtx8_formal <- exp(coef(mod_wtx8_formal))
+CI_wtx8_formal <- exp(confint(mod_wtx8_formal))
+
+#print OR and CI
+formal_OR_wtx8 <- data.frame(odds_ratios = OR_wtx8_formal, Lower_CI = CI_wtx8_formal[,1], Upper_CI = CI_wtx8_formal[,2])
+formal_OR_wtx8
+save(formal_OR_wtx8, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx8.RData")
+
+############## Regression - Why_tx_9 - informal
+
+mod_wtx9_inf <- svyglm(informal ~ why_tx_9_new + race + sex_birth, family = binomial, design = so_wtx9)
+summary(mod_wtx9_inf)
+OR_wtx9_inf <- exp(coef(mod_wtx9_inf))
+CI_wtx9_inf <- exp(confint(mod_wtx9_inf))
+
+#print OR and CI
+inf_OR_wtx9 <- data.frame(odds_ratios = OR_wtx9_inf, Lower_CI = CI_wtx9_inf[,1], Upper_CI = CI_wtx9_inf[,2])
+inf_OR_wtx9
+save(inf_OR_wtx9, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx9.RData")
+
+
+
+############## Regression - Why_tx_9 - formal
+
+
+mod_wtx9_formal <- svyglm(formal ~ why_tx_9_new + race + sex_birth, family = binomial, design = so_wtx9)
+summary(mod_wtx9_formal)
+OR_wtx9_formal <- exp(coef(mod_wtx9_formal))
+CI_wtx9_formal <- exp(confint(mod_wtx9_formal))
+
+#print OR and CI
+formal_OR_wtx9 <- data.frame(odds_ratios = OR_wtx9_formal, Lower_CI = CI_wtx9_formal[,1], Upper_CI = CI_wtx9_formal[,2])
+formal_OR_wtx9
+save(formal_OR_wtx9, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx9.RData")
+
+
+
+
+### Perceived Need for Help - Informal
+
+sum(is.na(psy.pn$percneed))
+sum(is.na(psy.pn$informal))
+
+unique(psy.pn$informal)
+
+mod_percneed_inf <- svyglm(informal ~ percneed + sex_birth + race, family = binomial, design = so_pn)
+summary(mod_percneed_inf)
+OR_pn_inf <- exp(coef(mod_percneed_inf))
+CI_pn_inf <- exp(confint(mod_percneed_inf))
+
+#print OR's and 95% CIs
+inf_OR_percneed <- data.frame(odds_ratios = OR_pn_inf, Lower_CI = CI_pn_inf[,1], Upper_CI = CI_pn_inf[,2])
+
+save(inf_OR_percneed, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_percneed.RData")
+
+### Perceived Need for Help - Formal
+
+mod_percneed_formal <- svyglm(formal ~ percneed + sex_birth + race, family = binomial, design = so_pn)
+summary(mod_percneed_formal)
+OR_pn_formal <- exp(coef(mod_percneed_formal))
+CI_pn_formal <- exp(confint(mod_percneed_formal))
+#print OR's and 95% CIs
+formal_OR_percneed <- data.frame(odds_ratios = OR_pn_formal, Lower_CI = CI_pn_formal[,1], Upper_CI = CI_pn_formal[,2])
+save(formal_OR_percneed, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_percneed.RData")
+
+#### Ther-Help-Me --- Informal
+
+sum(is.na(psy.thm$ther_help_me))
+sum(is.na(psy.thm$informal))
+sum(is.na(psy.thm$formal))
+
+mod_thm_inf <- svyglm(informal ~ ther_help_me + sex_birth + race, family = binomial, design = so_thm)
+summary(mod_thm_inf)
+OR_thm_inf <- exp(coef(mod_thm_inf))
+CI_thm_inf <- exp(confint(mod_thm_inf))
+inf_OR_thm <- data.frame(odds_ratios = OR_thm_inf, Lower_CI = CI_thm_inf[,1], Upper_CI = CI_thm_inf[,2])
+save(inf_OR_thm, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_thm.RData")
+
+#### Ther-Help-Me --- Formal
+
+mod_thm_formal <- svyglm(formal ~ ther_help_me + sex_birth + race, family = binomial, design = so_thm)
+summary(mod_thm_formal)
+OR_thm_formal <- exp(coef(mod_thm_formal))
+CI_thm_formal <- exp(confint(mod_thm_formal))
+formal_OR_thm <- data.frame(odds_ratios = OR_thm_formal, Lower_CI = CI_thm_formal[,1], Upper_CI = CI_thm_formal[,2])
+save(formal_OR_thm, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_thm.RData")
+
+#### meds-Help-Me --- Informal
+
+sum(is.na(psy.mhm$meds_help_me))
+sum(is.na(psy.mhm$informal))
+sum(is.na(psy.mhm$formal))
+
+mod_mhm_inf <- svyglm(informal ~ meds_help_me + sex_birth + race, family = binomial, design = so_mhm)
+summary(mod_mhm_inf)
+OR_mhm_inf <- exp(coef(mod_mhm_inf))
+CI_mhm_inf <- exp(confint(mod_mhm_inf))
+inf_OR_mhm <- data.frame(odds_ratios = OR_mhm_inf, Lower_CI = CI_mhm_inf[,1], Upper_CI = CI_mhm_inf[,2])
+save(inf_OR_mhm, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_mhm.RData")
+
+#### meds-Help-Me --- Formal
+
+mod_mhm_formal <- svyglm(formal ~ meds_help_me + sex_birth + race, family = binomial, design = so_mhm)
+summary(mod_mhm_formal)
+OR_mhm_formal <- exp(coef(mod_mhm_formal))
+CI_mhm_formal <- exp(confint(mod_mhm_formal))
+formal_OR_mhm <- data.frame(odds_ratios = OR_mhm_formal, Lower_CI = CI_mhm_formal[,1], Upper_CI = CI_mhm_formal[,2])
+save(formal_OR_mhm, file = "C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_mhm.RData")
+
+############################################ review
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_mhm.RData")
+
+formal_OR_mhm
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_percneed.RData")
+formal_OR_percneed
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_thm.RData")
+formal_OR_thm
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx1.RData")
+formal_OR_wtx1
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx2.RData")
+formal_OR_wtx2
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx3.RData")
+formal_OR_wtx3
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx4.RData")
+formal_OR_wtx4
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx5.RData")
+formal_OR_wtx5
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx6.RData")
+formal_OR_wtx6
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx7.RData")
+formal_OR_wtx7
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx8.RData")
+formal_OR_wtx8
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/formal_OR_wtx9.RData")
+formal_OR_wtx9
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_mhm.RData")
+inf_OR_mhm
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_percneed.RData")
+inf_OR_percneed
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_thm.RData")
+inf_OR_thm
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx1.RData")
+inf_OR_wtx1
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx2.RData")
+inf_OR_wtx2
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx3.RData")
+inf_OR_wtx3
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx4.RData")
+inf_OR_wtx4
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx5.RData")
+inf_OR_wtx5
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx6.RData")
+inf_OR_wtx6
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx7.RData")
+inf_OR_wtx7
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx8.RData")
+
+load("C:/Users/sarad/OneDrive/Desktop/School/MSAB/Research Rotation/Psychosis/Results/inf_OR_wtx9.RData")
